@@ -40,11 +40,15 @@ abstract class PixelStrip:
     frame.
   */
   output r/ByteArray g/ByteArray b/ByteArray w/ByteArray?=null -> none:
+
+    if w == null and bytes_per_pixel_ >= 4: throw "INVALID_ARGUMENT"
+    if w != null and bytes_per_pixel_ < 4: throw "INVALID_ARGUMENT"
+    if r.size < pixels_ or g.size < pixels_ or b.size < pixels_ or (w and w.size < pixels_): throw "INVALID_ARGUMENT"
     // Interleave r, g, b, and w.
     blit g inter_   pixels_ --destination_pixel_stride=bytes_per_pixel_
     blit r inter_1_ pixels_ --destination_pixel_stride=bytes_per_pixel_
     blit b inter_2_ pixels_ --destination_pixel_stride=bytes_per_pixel_
-    if bytes_per_pixel_ > 3:
+    if w:
       blit w inter_3_ pixels_ --destination_pixel_stride=bytes_per_pixel_
     output_interleaved
 
