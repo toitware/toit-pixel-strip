@@ -34,7 +34,7 @@ class UartPixelStrip extends PixelStrip:
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
     $bytes_per_pixel as 4.
   */
-  constructor pixels/int --pin/int=17 --invert_pin=true --bytes_per_pixel=3:
+  constructor pixels/int --pin/int=17 --invert_pin/bool=true --bytes_per_pixel/int=3:
     if bytes_per_pixel == 3:
       out_buf_ = ByteArray pixels * 8
     else:
@@ -65,19 +65,23 @@ class UartPixelStrip extends PixelStrip:
   close->none:
     port_.close
 
-  output_interleaved->none:
-    steps := inter_.size / 3
+  output_interleaved interleaved_data/ByteArray -> none:
+    steps := interleaved_data.size / 3
 
-    blit inter_   out_buf_   steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_0_
-    blit inter_   out_buf_1_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_1_
-    blit inter_   out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_2A_ --mask=0b00_111_11
-    blit inter_1_ out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_2B_ --mask=0b11_000_00 --operation=OR
-    blit inter_1_ out_buf_3_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_3_
-    blit inter_1_ out_buf_4_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_4_
-    blit inter_1_ out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_5A_ --mask=0b00_000_11
-    blit inter_2_ out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_5B_ --mask=0b11_111_00 --operation=OR
-    blit inter_2_ out_buf_6_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_6_
-    blit inter_2_ out_buf_7_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_7_
+    i0 := interleaved_data
+    i1 := (identical i0 inter_) ? inter_1_ : i0[1..]
+    i2 := (identical i0 inter_) ? inter_2_ : i0[2..]
+
+    blit i0 out_buf_   steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_0_
+    blit i0 out_buf_1_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_1_
+    blit i0 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_2A_ --mask=0b00_111_11
+    blit i1 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_2B_ --mask=0b11_000_00 --operation=OR
+    blit i1 out_buf_3_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_3_
+    blit i1 out_buf_4_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_4_
+    blit i1 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_5A_ --mask=0b00_000_11
+    blit i2 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_5B_ --mask=0b11_111_00 --operation=OR
+    blit i2 out_buf_6_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_6_
+    blit i2 out_buf_7_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_7_
 
     written := 0
     while written < out_buf_.size:

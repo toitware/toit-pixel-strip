@@ -36,7 +36,6 @@ class I2sPixelStrip extends PixelStrip:
       round_up
         pixels * bytes_per_pixel * 4
         BUFFER_SIZE_
-    print "out_buf_.size $out_buf_.size"
     out_buf_0_ = out_buf_[0..]
     out_buf_1_ = out_buf_[1..]
     out_buf_2_ = out_buf_[2..]
@@ -49,13 +48,13 @@ class I2sPixelStrip extends PixelStrip:
 
   close->none:
 
-  output_interleaved->none:
+  output_interleaved interleaved_data/ByteArray -> none:
     // TODO: We could save some memory using a 3-bit encoding of the signal
     // instead of the this 4-bit encoding.
-    blit inter_ out_buf_3_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_0_
-    blit inter_ out_buf_2_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_1_
-    blit inter_ out_buf_1_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_2_
-    blit inter_ out_buf_0_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_3_
+    blit interleaved_data out_buf_3_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_0_
+    blit interleaved_data out_buf_2_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_1_
+    blit interleaved_data out_buf_1_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_2_
+    blit interleaved_data out_buf_0_ pixels_ * bytes_per_pixel_ --destination_pixel_stride=4 --lookup_table=TABLE_3_
 
     bus_.write reset_
     written := bus_.write out_buf_

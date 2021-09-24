@@ -39,18 +39,17 @@ abstract class PixelStrip:
   Data is copied out of the byte arrays, so you can reuse them for the next
     frame.
   */
-  output r/ByteArray g/ByteArray b/ByteArray w/ByteArray?=null -> none:
-
-    if w == null and bytes_per_pixel_ >= 4: throw "INVALID_ARGUMENT"
-    if w != null and bytes_per_pixel_ < 4: throw "INVALID_ARGUMENT"
-    if r.size < pixels_ or g.size < pixels_ or b.size < pixels_ or (w and w.size < pixels_): throw "INVALID_ARGUMENT"
-    // Interleave r, g, b, and w.
-    blit g inter_   pixels_ --destination_pixel_stride=bytes_per_pixel_
-    blit r inter_1_ pixels_ --destination_pixel_stride=bytes_per_pixel_
-    blit b inter_2_ pixels_ --destination_pixel_stride=bytes_per_pixel_
-    if w:
-      blit w inter_3_ pixels_ --destination_pixel_stride=bytes_per_pixel_
-    output_interleaved
+  output red/ByteArray green/ByteArray blue/ByteArray white/ByteArray?=null -> none:
+    if white == null and bytes_per_pixel_ >= 4: throw "INVALID_ARGUMENT"
+    if white != null and bytes_per_pixel_ < 4: throw "INVALID_ARGUMENT"
+    if red.size < pixels_ or green.size < pixels_ or blue.size < pixels_ or (white and white.size < pixels_): throw "INVALID_ARGUMENT"
+    // Interleave red, green, blue, and white.
+    blit green inter_   pixels_ --destination_pixel_stride=bytes_per_pixel_
+    blit red inter_1_ pixels_ --destination_pixel_stride=bytes_per_pixel_
+    blit blue inter_2_ pixels_ --destination_pixel_stride=bytes_per_pixel_
+    if white:
+      blit white inter_3_ pixels_ --destination_pixel_stride=bytes_per_pixel_
+    output_interleaved inter_
 
   /**
   Takes one byte array of pixel values, interleaved in GRB order, or
@@ -60,4 +59,4 @@ abstract class PixelStrip:
   Data is copied out of the byte array, so you can reuse it for the next
     frame.
   */
-  abstract output_interleaved -> none
+  abstract output_interleaved interleaved_data/ByteArray -> none
