@@ -8,7 +8,7 @@ timing-based protocol.
 To use it, you need to feed byte-arrays of red, green and blue pixel
 data to the strips.
 
-# Example
+## Example
 
 ```
 import bitmap show bytemap_zap

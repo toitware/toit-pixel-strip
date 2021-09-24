@@ -16,7 +16,7 @@ TX ::= 17
 
 main:
   neopixels := UartPixelStrip PIXELS --pin=TX --bytes_per_pixel=4
-  //neopixels := I2SPixelStrip PIXELS --pin=TX --bytes_per_pixel=4
+  //neopixels := I2sPixelStrip PIXELS --pin=TX --bytes_per_pixel=4
   r := ByteArray PIXELS
   g := ByteArray PIXELS
   b := ByteArray PIXELS
