@@ -6,7 +6,7 @@ import .uart
 import .i2s
 import bitmap show blit
 
-export *
+export I2sPixelStrip UartPixelStrip
 
 /**
 A driver that sends data to attached WS2812B LED strips, sometimes
