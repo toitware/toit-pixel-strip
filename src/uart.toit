@@ -75,7 +75,7 @@ abstract class UartEncodingPixelStrip_ extends PixelStrip:
     0b00_110_10,   // 0b101
     0b10_100_10,   // 0b110
     0b00_100_10,   // 0b111
-    ]
+  ]
 
   // Blit requires a 256-entry table although only the first 8 entries will be
   // used.
@@ -104,7 +104,7 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
     // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
     // which enables us to control the TX line with a 400ns granularity.
     // Serial lines are normally high when idle, but the protocol requires
-    // low when idle, so we invert the signal.  This also means the start
+    // low when idle, so we invert the signal by default.  This also means the start
     // bit, normally low, is now high.
     tx := gpio.Pin.out pin
     port_ = uart.Port
@@ -119,6 +119,6 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
   close->none:
     port_.close
 
-  /// See superclass.
+  /// See $super.
   output_interleaved interleaved_data/ByteArray -> none:
     output_interleaved_ interleaved_data: port_.write it
