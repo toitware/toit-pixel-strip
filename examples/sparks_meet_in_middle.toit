@@ -46,7 +46,7 @@ main:
       set_both_ends r it-8 1
       set_both_ends r it-9 0
       neopixels.output r g b w
-      sleep --ms=1
+      sleep --ms=2
 
     // Explosion on the whole strip in white, fading away to black.
     for i := 255; i > -10; i -= 10:
@@ -55,7 +55,7 @@ main:
       bytemap_zap b (max i 0)
       bytemap_zap w (max i 0)
       neopixels.output r g b w
-      sleep --ms=1
+      sleep --ms=2
 
 set array i v:
   if 0 <= i < array.size: array[i] = v
