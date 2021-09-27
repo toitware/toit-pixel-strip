@@ -7,11 +7,7 @@ import uart
 import bitmap show blit OR
 import .pixel_strip
 
-/**
-A driver that sends data to attached WS2812B LED strips, sometimes
-  called Neopixel.  The UART driver is used.
-*/
-class UartPixelStrip extends PixelStrip:
+abstract class UartEncodingPixelStrip_ extends PixelStrip:
   out_buf_ := ?
   out_buf_1_ := ?
   out_buf_2_ := ?
@@ -20,25 +16,9 @@ class UartPixelStrip extends PixelStrip:
   out_buf_5_ := ?
   out_buf_6_ := ?
   out_buf_7_ := ?
-  port_/uart.Port := ?
 
-  /**
-  A driver that sends data to attached WS2812B LED strips, sometimes
-    called Neopixel.  The UART driver is used.  Preferred pin is pin
-    17, but others should work.
-  Normally you need to invert the TX pin of a UART to use it for
-    WS2812B LED strips.  Often you also need a level shifter to
-    convert from 3.3V to 5V.  If your level shifter also inverts
-    the pin you can disable the inverted pin support with $invert_pin.
-  If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at
-    3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
-    $bytes_per_pixel as 4.
-  */
-  constructor pixels/int --pin/int=17 --invert_pin/bool=true --bytes_per_pixel/int=3:
-    if bytes_per_pixel == 3:
-      out_buf_ = ByteArray pixels * 8
-    else:
-      out_buf_ = ByteArray (pixels * bytes_per_pixel * 8) / 3 + 2
+  constructor pixels/int --bytes_per_pixel/int=3:
+    out_buf_ = ByteArray (round_up pixels * bytes_per_pixel 3) * 8 / 3
     out_buf_1_ = out_buf_[1..]
     out_buf_2_ = out_buf_[2..]
     out_buf_3_ = out_buf_[3..]
@@ -47,58 +27,34 @@ class UartPixelStrip extends PixelStrip:
     out_buf_6_ = out_buf_[6..]
     out_buf_7_ = out_buf_[7..]
 
-    // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
-    // which enables us to control the TX line with a 400ns granularity.
-    // Serial lines are normally high when idle, but the protocol requires
-    // low when idle, so we invert the signal.  This also means the start
-    // bit, normally low, is now high.
-    tx := gpio.Pin.out pin
-    port_ = uart.Port
-      --tx=tx
-      --rx=null
-      --baud_rate=2_500_000  // For a 400ns granularity.
-      --data_bits=7
-      --invert_tx=invert_pin
-
     super pixels --bytes_per_pixel=bytes_per_pixel
 
-  close->none:
-    port_.close
-
-  output_interleaved interleaved_data/ByteArray -> none:
+  output_interleaved_ interleaved_data/ByteArray [write_block] -> none:
     steps := interleaved_data.size / 3
 
     i0 := interleaved_data
     i1 := (identical i0 inter_) ? inter_1_ : i0[1..]
     i2 := (identical i0 inter_) ? inter_2_ : i0[2..]
 
-    blit i0 out_buf_   steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_0_
-    blit i0 out_buf_1_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_1_
-    blit i0 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_2A_ --mask=0b00_111_11
-    blit i1 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_2B_ --mask=0b11_000_00 --operation=OR
-    blit i1 out_buf_3_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_3_
-    blit i1 out_buf_4_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_4_
-    blit i1 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_5A_ --mask=0b00_000_11
-    blit i2 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_5B_ --mask=0b11_111_00 --operation=OR
-    blit i2 out_buf_6_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_6_
-    blit i2 out_buf_7_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --lookup_table=TABLE_7_
+    // Split each 24-bit sequence into 8 bytes with 3 bits in each.
+    blit i0 out_buf_   steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=5 --mask=0b111
+    blit i0 out_buf_1_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=2 --mask=0b111
+    blit i0 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=7 --mask=0b110
+    blit i1 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=7 --mask=0b001 --operation=OR
+    blit i1 out_buf_3_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=4 --mask=0b111
+    blit i1 out_buf_4_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=1 --mask=0b111
+    blit i1 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=6 --mask=0b100
+    blit i2 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=6 --mask=0b011 --operation=OR
+    blit i2 out_buf_6_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=3 --mask=0b111
+    blit i2 out_buf_7_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=0 --mask=0b111
+
+    // In-place translation of the 3 bits into the pixel encoding of those 3 bits.
+    blit out_buf_ out_buf_ steps --lookup_table=TABLE_
 
     written := 0
     while written < out_buf_.size:
-      result := port_.write out_buf_[written..]
+      result := write_block.call out_buf_[written..]
       written += result
-    port_.write #[] --wait
-
-  static TABLE_0_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[it >> 5]
-  static TABLE_1_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[(it >> 2) & 7]
-  static TABLE_2A_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[(it << 1) & 7]
-  static TABLE_2B_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[it >> 7]
-  static TABLE_3_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[(it >> 4) & 7]
-  static TABLE_4_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[(it >> 1) & 7]
-  static TABLE_5A_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[(it << 2) & 7]
-  static TABLE_5B_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[it >> 6]
-  static TABLE_6_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[(it >> 3) & 7]
-  static TABLE_7_ ::= ByteArray 256: ENCODING_TABLE_3_BIT_[it & 7]
 
   // We can output 3 bits of WS2812B protocol by sending nine high or low
   // signals.
@@ -120,3 +76,49 @@ class UartPixelStrip extends PixelStrip:
     0b10_100_10,   // 0b110
     0b00_100_10,   // 0b111
     ]
+
+  // Blit requires a 256-entry table although only the first 8 entries will be
+  // used.
+  static TABLE_ ::= ByteArray 256: it < 8 ? ENCODING_TABLE_3_BIT_[it] : 0
+
+/**
+A driver that sends data to attached WS2812B LED strips, sometimes
+  called Neopixel.  The UART hardware is used.
+*/
+class UartPixelStrip extends UartEncodingPixelStrip_:
+  port_/uart.Port := ?
+
+  /**
+  A driver that sends data to attached WS2812B LED strips, sometimes
+    called Neopixel.  The UART driver is used.  Preferred pin is pin
+    17, but others should work.
+  Normally you need to invert the TX pin of a UART to use it for
+    WS2812B LED strips.  Often you also need a level shifter to
+    convert from 3.3V to 5V.  If your level shifter also inverts
+    the pin you can disable the inverted pin support with $invert_pin.
+  If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at
+    3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
+    $bytes_per_pixel as 4.
+  */
+  constructor pixels/int --pin/int=17 --invert_pin/bool=true --bytes_per_pixel/int=3:
+    // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
+    // which enables us to control the TX line with a 400ns granularity.
+    // Serial lines are normally high when idle, but the protocol requires
+    // low when idle, so we invert the signal.  This also means the start
+    // bit, normally low, is now high.
+    tx := gpio.Pin.out pin
+    port_ = uart.Port
+      --tx=tx
+      --rx=null
+      --baud_rate=2_500_000  // For a 400ns granularity.
+      --data_bits=7
+      --invert_tx=invert_pin
+
+    super pixels --bytes_per_pixel=bytes_per_pixel
+
+  close->none:
+    port_.close
+
+  /// See superclass.
+  output_interleaved interleaved_data/ByteArray -> none:
+    output_interleaved_ interleaved_data: port_.write it
