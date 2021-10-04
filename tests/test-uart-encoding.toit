@@ -65,6 +65,10 @@ create_high_low_encoding ba/ByteArray:
   return result
 
 main:
+  encoding_test
+  rounding_test
+
+encoding_test:
   one_pix := UartTestPixelStrip 1 --bytes_per_pixel=3
 
   three_zeros := #[0, 0, 0]
@@ -96,3 +100,67 @@ main:
       long_sequence
       it
     it.size
+
+class UartTestPixelStripRounding extends UartEncodingPixelStrip_:
+
+  constructor pixels/int --bytes_per_pixel/int:
+    super pixels --bytes_per_pixel=bytes_per_pixel
+
+  output_interleaved interleaved_data/ByteArray -> none:
+    expect interleaved_data.size == pixels_ * 4  // 4 bytes per pixel
+    last_idx := (pixels_ - 1) * 4
+    last_idx.repeat: expect_equals 0 interleaved_data[it]  // All but last pixel are zero.
+    // GRBW ordering.
+    expect_equals 0xaa interleaved_data[last_idx + 0]
+    expect_equals 0x55 interleaved_data[last_idx + 1]
+    expect_equals 42   interleaved_data[last_idx + 2]
+    expect_equals 0xff interleaved_data[last_idx + 3]
+
+    output_interleaved_ interleaved_data: | uart_output |
+      // Four bytes per pixel.
+      unencoded_byte_count := pixels_ * 4  // 44 for an 11 pixel strip.
+      // Round up to 3.
+      rounded_unencoded_byte_count := round_up unencoded_byte_count 3  // 45 for an 11 pixel strip.
+      // 8 bits in a byte.
+      unencoded_bit_count := rounded_unencoded_byte_count * 8 // 360 for an 11 pixel strip.
+      // The UART encodes 3 bits in each output byte.
+      encoded_byte_count := unencoded_bit_count / 3  // 120 for an 11 pixel strip.
+
+      expect_equals encoded_byte_count uart_output.size  // 120 for an 11 pixel strip.
+
+      // The number of bits the pixels will read (the rest fall off the end of the strip).
+      number_of_real_bits := pixels_ * 4 * 8
+      number_of_real_bits_rounded := round_up number_of_real_bits 3
+      number_of_real_output_bytes := number_of_real_bits_rounded / 3
+      number_of_real_output_bytes.repeat:
+        // 0 is never valid encoding of the high-low patterns.
+        expect uart_output[it] != 0
+
+      // After the encoding of 3 bits to bytes, 000 is encoded as 0x5b and 111
+      // is encoded as 0x12.
+      // We expect 0x12 for the penultimate encoded byte since it must be
+      // somewhere in the last unencoded byte, which was all-ones (the white
+      // component of the last pixel is 0xff).
+      expect_equals 0x12 uart_output[number_of_real_output_bytes - 2]
+
+      // Return value from block.
+      uart_output.size
+
+rounding_test:
+  // Try some 4-byte-per-pixel strips that are not a multiple of 3 in
+  // length.  This checks that we round things correctly when fractional
+  // bytes are output at the end because of the 3-bit-to-8-bit encoding.
+  for length := 9; length < 12; length++:
+    test_strip := UartTestPixelStripRounding length --bytes_per_pixel=4
+
+    r := ByteArray length
+    g := ByteArray length
+    b := ByteArray length
+    w := ByteArray length
+
+    r[length - 1] = 0x55
+    g[length - 1] = 0xaa
+    b[length - 1] = 42
+    w[length - 1] = 0xff
+
+    test_strip.output r g b w

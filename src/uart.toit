@@ -30,26 +30,24 @@ abstract class UartEncodingPixelStrip_ extends PixelStrip:
     super pixels --bytes_per_pixel=bytes_per_pixel
 
   output_interleaved_ interleaved_data/ByteArray [write_block] -> none:
-    steps := interleaved_data.size / 3
-
     i0 := interleaved_data
     i1 := (identical i0 inter_) ? inter_1_ : i0[1..]
     i2 := (identical i0 inter_) ? inter_2_ : i0[2..]
 
     // Split each 24-bit sequence into 8 bytes with 3 bits in each.
-    blit i0 out_buf_   steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=5 --mask=0b111
-    blit i0 out_buf_1_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=2 --mask=0b111
-    blit i0 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=7 --mask=0b110
-    blit i1 out_buf_2_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=7 --mask=0b001 --operation=OR
-    blit i1 out_buf_3_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=4 --mask=0b111
-    blit i1 out_buf_4_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=1 --mask=0b111
-    blit i1 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=6 --mask=0b100
-    blit i2 out_buf_5_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=6 --mask=0b011 --operation=OR
-    blit i2 out_buf_6_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=3 --mask=0b111
-    blit i2 out_buf_7_ steps --destination_pixel_stride=8 --source_pixel_stride=3 --shift=0 --mask=0b111
+    blit i0 out_buf_   1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=5 --mask=0b111
+    blit i0 out_buf_1_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=2 --mask=0b111
+    blit i0 out_buf_2_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=7 --mask=0b110
+    blit i1 out_buf_2_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=7 --mask=0b001 --operation=OR
+    blit i1 out_buf_3_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=4 --mask=0b111
+    blit i1 out_buf_4_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=1 --mask=0b111
+    blit i1 out_buf_5_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=6 --mask=0b100
+    blit i2 out_buf_5_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=6 --mask=0b011 --operation=OR
+    blit i2 out_buf_6_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=3 --mask=0b111
+    blit i2 out_buf_7_ 1 --destination_pixel_stride=8 --source_pixel_stride=3 --shift=0 --mask=0b111
 
     // In-place translation of the 3 bits into the pixel encoding of those 3 bits.
-    blit out_buf_ out_buf_ steps --lookup_table=TABLE_
+    blit out_buf_ out_buf_ 8 --lookup_table=TABLE_
 
     written := 0
     while written < out_buf_.size:
@@ -99,6 +97,10 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
   If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
     $bytes_per_pixel as 4.
+  Note: You must update the whole strip.  If your strip has 15 pixels
+    it is not supported to call this constructor with $pixels of 11 in
+    order to update only the first 11 pixels.  This is likely to cause
+    color errors on the 12th pixel.
   */
   constructor pixels/int --pin/int=17 --invert_pin/bool=true --bytes_per_pixel/int=3:
     // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
