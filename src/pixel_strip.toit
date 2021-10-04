@@ -50,8 +50,8 @@ abstract class PixelStrip:
     if red.size < pixels_ or green.size < pixels_ or blue.size < pixels_ or (white and white.size < pixels_): throw "INVALID_ARGUMENT"
     // Interleave red, green, blue, and white.
     blit green inter_   pixels_ --destination_pixel_stride=bytes_per_pixel_
-    blit red inter_1_ pixels_ --destination_pixel_stride=bytes_per_pixel_
-    blit blue inter_2_ pixels_ --destination_pixel_stride=bytes_per_pixel_
+    blit red   inter_1_ pixels_ --destination_pixel_stride=bytes_per_pixel_
+    blit blue  inter_2_ pixels_ --destination_pixel_stride=bytes_per_pixel_
     if white:
       blit white inter_3_ pixels_ --destination_pixel_stride=bytes_per_pixel_
     output_interleaved inter_
