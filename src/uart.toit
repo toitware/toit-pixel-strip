@@ -97,7 +97,9 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
   If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
     $bytes_per_pixel as 4.
-  Note: You must update the whole strip.  If your strip has 15 pixels
+
+  # Note
+  You must update the whole strip.  If your strip has 15 pixels
     it is not supported to call this constructor with $pixels of 11 in
     order to update only the first 11 pixels.  This is likely to cause
     color errors on the 12th pixel.

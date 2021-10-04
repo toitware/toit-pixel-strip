@@ -107,7 +107,7 @@ class UartTestPixelStripRounding extends UartEncodingPixelStrip_:
     super pixels --bytes_per_pixel=bytes_per_pixel
 
   output_interleaved interleaved_data/ByteArray -> none:
-    expect interleaved_data.size == pixels_ * 4  // 4 bytes per pixel
+    expect interleaved_data.size == pixels_ * 4  // 4 bytes per pixel.
     last_idx := (pixels_ - 1) * 4
     last_idx.repeat: expect_equals 0 interleaved_data[it]  // All but last pixel are zero.
     // GRBW ordering.
