@@ -1,6 +1,6 @@
 # Pixel Strip
 
-A driver library for WS2812B-compatible pixel strips like Neopixels.
+A driver library for WS2812B-compatible LED pixel strips like Neopixels.
 
 This takes care of the communication with the pixels via a 1-wire
 timing-based protocol.
