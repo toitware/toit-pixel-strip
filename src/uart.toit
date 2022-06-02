@@ -84,12 +84,16 @@ A driver that sends data to attached WS2812B LED strips, sometimes
   called Neopixel.  The UART hardware is used.
 */
 class UartPixelStrip extends UartEncodingPixelStrip_:
-  port_/uart.Port := ?
+  port_ /uart.Port? := ?
+  pin_ /gpio.Pin? := null  // Only set if the pin needs closing.
 
   /**
   A driver that sends data to attached WS2812B LED strips, sometimes
-    called Neopixel.  The UART driver is used.  Preferred pin is pin
-    17, but others should work.
+    called Neopixel.  The UART driver is used on the given $pin.
+
+  The $pin should be of type $gpio.Pin. The use of a pin number for $pin is
+    deprecated.
+
   Normally you need to invert the TX pin of a UART to use it for
     WS2812B LED strips.  Often you also need a level shifter to
     convert from 3.3V to 5V.  If your level shifter also inverts
@@ -104,13 +108,19 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
     order to update only the first 11 pixels.  This is likely to cause
     color errors on the 12th pixel.
   */
-  constructor pixels/int --pin/int=17 --invert_pin/bool=true --bytes_per_pixel/int=3:
+  constructor pixels/int --pin/any --invert_pin/bool=true --bytes_per_pixel/int=3:
     // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
     // which enables us to control the TX line with a 400ns granularity.
     // Serial lines are normally high when idle, but the protocol requires
     // low when idle, so we invert the signal by default.  This also means the start
     // bit, normally low, is now high.
-    tx := gpio.Pin.out pin
+    tx /gpio.Pin := ?
+    if pin is int:
+      tx = gpio.Pin.out pin
+      pin_ = tx
+    else:
+      tx = pin
+
     port_ = uart.Port
       --tx=tx
       --rx=null
@@ -121,7 +131,15 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
     super pixels --bytes_per_pixel=bytes_per_pixel
 
   close->none:
+    if not port_: return
     port_.close
+    port_ = null
+    if pin_:
+      pin_.close
+      pin_ = null
+
+  is_closed -> bool:
+    return not port_
 
   /// See $super.
   output_interleaved interleaved_data/ByteArray -> none:
