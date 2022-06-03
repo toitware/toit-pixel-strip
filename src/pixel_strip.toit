@@ -38,7 +38,7 @@ abstract class PixelStrip:
     strip.  The byte arrays should have the same size as $pixels.
   Data is copied out of the byte arrays, so you can reuse them for the next
     frame.
-  The pixel hardware uses a pause in the transmission to detect the 
+  The pixel hardware uses a pause in the transmission to detect the
     start of the next frame of image data.  Therefore you should leave
     a few milliseconds before calling this method again.  If your program
     generates the next frame too fast you may have to add sleep--ms=2 after
@@ -65,3 +65,6 @@ abstract class PixelStrip:
     frame.
   */
   abstract output_interleaved interleaved_data/ByteArray -> none
+
+  abstract close -> none
+  abstract is_closed -> bool
