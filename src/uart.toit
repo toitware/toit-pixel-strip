@@ -79,36 +79,11 @@ abstract class UartEncodingPixelStrip_ extends PixelStrip:
   // used.
   static TABLE_ ::= ByteArray 256: it < 8 ? ENCODING_TABLE_3_BIT_[it] : 0
 
-/**
-A driver that sends data to attached WS2812B LED strips, sometimes
-  called Neopixel.  The UART hardware is used.
-*/
-class UartPixelStrip extends UartEncodingPixelStrip_:
+class UartPixelStrip_ extends UartEncodingPixelStrip_:
   port_ /uart.Port? := ?
   pin_ /gpio.Pin? := null  // Only set if the pin needs closing.
 
-  /**
-  A driver that sends data to attached WS2812B LED strips, sometimes
-    called Neopixel.  The UART driver is used on the given $pin.
-
-  The $pin should be of type $gpio.Pin. The use of a pin number for $pin is
-    deprecated.
-
-  Normally you need to invert the TX pin of a UART to use it for
-    WS2812B LED strips.  Often you also need a level shifter to
-    convert from 3.3V to 5V.  If your level shifter also inverts
-    the pin you can disable the inverted pin support with $invert_pin.
-  If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at
-    3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
-    $bytes_per_pixel as 4.
-
-  # Note
-  You must update the whole strip.  If your strip has 15 pixels
-    it is not supported to call this constructor with $pixels of 11 in
-    order to update only the first 11 pixels.  This is likely to cause
-    color errors on the 12th pixel.
-  */
-  constructor pixels/int --pin/any --invert_pin/bool=true --bytes_per_pixel/int=3:
+  constructor pixels/int --pin/any --invert_pin/bool=true --bytes_per_pixel/int:
     // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
     // which enables us to control the TX line with a 400ns granularity.
     // Serial lines are normally high when idle, but the protocol requires
@@ -141,6 +116,15 @@ class UartPixelStrip extends UartEncodingPixelStrip_:
   is_closed -> bool:
     return not port_
 
-  /// See $super.
   output_interleaved interleaved_data/ByteArray -> none:
     output_interleaved_ interleaved_data: port_.write it
+
+/**
+Deprecated. Use $PixelStrip.uart instead.
+*/
+class UartPixelStrip extends UartPixelStrip_:
+  /**
+  Deprecated. Use $PixelStrip.uart instead.
+  */
+  constructor pixels/int --pin/any --invert_pin/bool=true --bytes_per_pixel/int=3:
+    super pixels --pin=pin --invert_pin=invert_pin --bytes_per_pixel=bytes_per_pixel

@@ -5,6 +5,7 @@
 import .uart
 import .i2s
 import bitmap show blit
+import gpio
 
 export I2sPixelStrip UartPixelStrip
 
@@ -31,6 +32,27 @@ abstract class PixelStrip:
     inter_1_ = inter_[1..]
     inter_2_ = inter_[2..]
     if bytes_per_pixel > 3: inter_3_ = inter_[3..]
+
+  /**
+  A driver that sends data to attached WS2812B LED strips, sometimes
+    called Neopixel.  The UART driver is used on the given $pin.
+
+  Normally you need to invert the TX pin of a UART to use it for
+    WS2812B LED strips.  Often you also need a level shifter to
+    convert from 3.3V to 5V.  If your level shifter also inverts
+    the pin you can disable the inverted pin support with $invert_pin.
+  If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at 3.
+    For SK8612 RGBW strips (usually with natural or warm white) specify
+    $bytes_per_pixel as 4.
+
+  # Note
+  You must update the whole strip.  If your strip has 15 pixels
+    it is not supported to call this constructor with $pixels of 11 in
+    order to update only the first 11 pixels.  This is likely to cause
+    color errors on the 12th pixel.
+  */
+  constructor.uart pixels/int --pin/gpio.Pin --invert_pin/bool=true --bytes_per_pixel/int=3:
+    return UartPixelStrip_ pixels --pin=pin --invert_pin=invert_pin --bytes_per_pixel=bytes_per_pixel
 
   /**
   Takes three or four byte arrays of pixel values (depending on the number of
