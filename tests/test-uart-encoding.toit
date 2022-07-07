@@ -18,6 +18,10 @@ class UartTestPixelStrip extends UartEncodingPixelStrip_:
     // We only implemented this method to avoid the abstract class error, it's not used for testing.
     throw "UNREACHABLE"
 
+  close:  // Do nothing.
+
+  is_closed: return false
+
 expect_uart_equals interleaved/ByteArray array/ByteArray:
   encoding := create_high_low_encoding interleaved
   // 3 bits encoded in each byte.
@@ -145,6 +149,10 @@ class UartTestPixelStripRounding extends UartEncodingPixelStrip_:
 
       // Return value from block.
       uart_output.size
+
+  close: // Do nothing
+
+  is_closed: return false
 
 rounding_test:
   // Try some 4-byte-per-pixel strips that are not a multiple of 3 in
