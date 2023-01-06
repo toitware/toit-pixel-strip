@@ -83,7 +83,7 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
   port_ /uart.Port? := ?
   pin_ /gpio.Pin? := null  // Only set if the pin needs closing.
 
-  constructor pixels/int --pin/any --invert_pin/bool=true --bytes_per_pixel/int:
+  constructor pixels/int --pin/any --invert_pin/bool=true --bytes_per_pixel/int --high_priority/bool?=null:
     // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
     // which enables us to control the TX line with a 400ns granularity.
     // Serial lines are normally high when idle, but the protocol requires
@@ -97,11 +97,12 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
       tx = pin
 
     port_ = uart.Port
-      --tx=tx
-      --rx=null
-      --baud_rate=2_500_000  // For a 400ns granularity.
-      --data_bits=7
-      --invert_tx=invert_pin
+        --tx=tx
+        --rx=null
+        --baud_rate=2_500_000  // For a 400ns granularity.
+        --data_bits=7
+        --invert_tx=invert_pin
+        --high_priority=high_priority
 
     super pixels --bytes_per_pixel=bytes_per_pixel
 

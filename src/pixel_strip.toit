@@ -44,15 +44,18 @@ abstract class PixelStrip:
   If your strip is RGB (24 bits per pixel), leave $bytes_per_pixel at 3.
     For SK8612 RGBW strips (usually with natural or warm white) specify
     $bytes_per_pixel as 4.
-
+  Because of the high baud rate, the system will default to running
+    the UART with a high priority.  However your ESP32 may not have
+    the interrupt resources for that.  In this case, set
+    $high_priority to false.
   # Note
   You must update the whole strip.  If your strip has 15 pixels
     it is not supported to call this constructor with $pixels of 11 in
     order to update only the first 11 pixels.  This is likely to cause
     color errors on the 12th pixel.
   */
-  constructor.uart pixels/int --pin/gpio.Pin --invert_pin/bool=true --bytes_per_pixel/int=3:
-    return UartPixelStrip_ pixels --pin=pin --invert_pin=invert_pin --bytes_per_pixel=bytes_per_pixel
+  constructor.uart pixels/int --pin/gpio.Pin --invert_pin/bool=true --bytes_per_pixel/int=3 --high_priority/bool?=null:
+    return UartPixelStrip_ pixels --pin=pin --invert_pin=invert_pin --bytes_per_pixel=bytes_per_pixel --high_priority=high_priority
 
   /**
   Takes three or four byte arrays of pixel values (depending on the number of
