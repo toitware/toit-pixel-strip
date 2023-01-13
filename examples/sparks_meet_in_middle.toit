@@ -33,19 +33,19 @@ main:
       set_both_ends g it 255
       set_both_ends b it 255
       set_both_ends w it 255
-      set_both_ends r it-1 255
-      set_both_ends g it-1 0
-      set_both_ends b it-1 0
-      set_both_ends w it-1 0
-      set_both_ends r it-2 128
-      set_both_ends r it-3 64
-      set_both_ends r it-4 32
-      set_both_ends r it-5 16
-      set_both_ends r it-5 8
-      set_both_ends r it-6 4
-      set_both_ends r it-7 2
-      set_both_ends r it-8 1
-      set_both_ends r it-9 0
+      set_both_ends r (it - 1) 255
+      set_both_ends g (it - 1) 0
+      set_both_ends b (it - 1) 0
+      set_both_ends w (it - 1) 0
+      set_both_ends r (it - 2) 128
+      set_both_ends r (it - 3) 64
+      set_both_ends r (it - 4) 32
+      set_both_ends r (it - 5) 16
+      set_both_ends r (it - 5) 8
+      set_both_ends r (it - 6) 4
+      set_both_ends r (it - 7) 2
+      set_both_ends r (it - 8) 1
+      set_both_ends r (it - 9) 0
       neopixels.output r g b w
       sleep --ms=2
 
