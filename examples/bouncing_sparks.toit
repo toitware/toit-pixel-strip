@@ -4,7 +4,7 @@
 
 // Sparks are white and have a fading tail of a random color.
 // When they collide, one of them disappears and the other
-// continues.  Someimes they spontaneously disappear.  Whenever
+// continues.  Sometimes they spontaneously disappear.  Whenever
 // a spark disappears, a new one appears somewhere else.
 
 import bitmap show bytemap_zap
