@@ -4,14 +4,14 @@
 
 // The Pycom gpy has a single WS2812B-compatible multicolor LED.
 
-import bitmap show bytemap_zap
-import pixel_strip show *
+import bitmap show bytemap-zap
+import pixel-strip show *
 import gpio
 
 /// 32 brightnesses that appear evenly spaced.
-BRIGHTNESSES := get_brightnesses_
+BRIGHTNESSES := get-brightnesses_
 
-get_brightnesses_:
+get-brightnesses_:
   result := []
   for power := 8; power > 0; power--:
     STEPS_.do:
@@ -24,7 +24,7 @@ STEPS_ ::= [27, 23, 19, 16]  // Log distributed.
 TX ::= 0
 
 main:
-  neopixel := PixelStrip.uart 1 --pin=(gpio.Pin TX) --bytes_per_pixel=3
+  neopixel := PixelStrip.uart 1 --pin=(gpio.Pin TX) --bytes-per-pixel=3
   r := ByteArray 1
   g := ByteArray 1
   b := ByteArray 1
