@@ -7,8 +7,8 @@
 // continues.  Sometimes they spontaneously disappear.  Whenever
 // a spark disappears, a new one appears somewhere else.
 
-import bitmap show bytemap_zap
-import pixel_strip show *
+import bitmap show bytemap-zap
+import pixel-strip show *
 import gpio
 
 PIXELS ::= 300
@@ -47,7 +47,7 @@ class Spark:
     tail = min 30 tail + 1
 
 main:
-  neopixels := PixelStrip.uart PIXELS --pin=(gpio.Pin TX) --bytes_per_pixel=4
+  neopixels := PixelStrip.uart PIXELS --pin=(gpio.Pin TX) --bytes-per-pixel=4
   r := ByteArray PIXELS
   g := ByteArray PIXELS
   b := ByteArray PIXELS
@@ -58,10 +58,10 @@ main:
   sparks := List 5: Spark (random PIXELS) it * 2
 
   while true:
-    bytemap_zap r 0
-    bytemap_zap g 0
-    bytemap_zap b 0
-    bytemap_zap w 0
+    bytemap-zap r 0
+    bytemap-zap g 0
+    bytemap-zap b 0
+    bytemap-zap w 0
 
     sparks.do: it.plot r g b w
 
