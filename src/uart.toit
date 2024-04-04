@@ -49,10 +49,7 @@ abstract class UartEncodingPixelStrip_ extends PixelStrip:
     // In-place translation of the 3 bits into the pixel encoding of those 3 bits.
     blit out_buf_ out_buf_ 8 --lookup_table=TABLE_
 
-    written := 0
-    while written < out_buf_.size:
-      result := write_block.call out_buf_[written..]
-      written += result
+    write_block.call out_buf_
 
   // We can output 3 bits of WS2812B protocol by sending nine high or low
   // signals.
@@ -118,7 +115,7 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
     return not port_
 
   output_interleaved interleaved_data/ByteArray -> none:
-    output_interleaved_ interleaved_data: port_.write it
+    output_interleaved_ interleaved_data: port_.out.write it
 
 /**
 Deprecated. Use $PixelStrip.uart instead.
