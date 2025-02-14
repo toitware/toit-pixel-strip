@@ -56,12 +56,15 @@ class I2sPixelStrip extends PixelStrip:
     else:
       tx = pin
 
-    bus_ = i2s.Bus --tx=tx --sample-rate=100_000 --bits-per-sample=16 --buffer-size=BUFFER-SIZE_
+    bus_ = i2s.Bus --tx=tx
+    bus_.configure --sample-rate=100_000 --bits-per-sample=16
+    bus_.start
 
     super pixels --bytes-per-pixel=bytes-per-pixel
 
   close->none:
     if bus_:
+      bus_.stop
       bus_.close
       bus_ = null
     if pin_:
@@ -73,7 +76,7 @@ class I2sPixelStrip extends PixelStrip:
 
   output-interleaved interleaved-data/ByteArray -> none:
     // TODO: We could save some memory using a 3-bit encoding of the signal
-    // instead of the this 4-bit encoding.
+    // instead of this 4-bit encoding.
     blit interleaved-data out-buf-3_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-0_
     blit interleaved-data out-buf-2_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-1_
     blit interleaved-data out-buf-1_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-2_
@@ -82,6 +85,7 @@ class I2sPixelStrip extends PixelStrip:
     bus_.write reset_
     written := bus_.write out-buf_
     if written != out-buf_.size: print "Tried to write $out-buf_.size, wrote $written"
+    // TODO(florian): since we don't write anything else, it's not clear what will be written.
 
   static TABLE-0_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[it >> 6]
   static TABLE-1_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[(it >> 4) & 3]
