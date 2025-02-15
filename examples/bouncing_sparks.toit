@@ -46,8 +46,13 @@ class Spark:
     center += direction
     tail = min 30 tail + 1
 
-main:
-  neopixels := PixelStrip.uart PIXELS --pin=(gpio.Pin TX) --bytes-per-pixel=4
+main args:
+  neopixels/PixelStrip := ?
+  if args.size == 0:
+    neopixels = PixelStrip.uart PIXELS --pin=(gpio.Pin TX) --bytes-per-pixel=4
+  else:
+    neopixels = PixelStrip.uart PIXELS --path=args[0] --bytes-per-pixel=4
+
   r := ByteArray PIXELS
   g := ByteArray PIXELS
   b := ByteArray PIXELS

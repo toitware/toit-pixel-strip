@@ -103,6 +103,14 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
 
     super pixels --bytes-per-pixel=bytes-per-pixel
 
+  constructor pixels/int --path/string --bytes-per-pixel/int:
+    port_ = uart.Port
+        path
+        --baud-rate=2_500_000  // For a 400ns granularity.
+        --data-bits=7
+
+    super pixels --bytes-per-pixel=bytes-per-pixel
+
   close->none:
     if not port_: return
     port_.close

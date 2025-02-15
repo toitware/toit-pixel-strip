@@ -57,6 +57,9 @@ abstract class PixelStrip:
   constructor.uart pixels/int --pin/gpio.Pin --invert-pin/bool=true --bytes-per-pixel/int=3 --high-priority/bool?=null:
     return UartPixelStrip_ pixels --pin=pin --invert-pin=invert-pin --bytes-per-pixel=bytes-per-pixel --high-priority=high-priority
 
+  constructor.uart pixels/int --path/string --bytes-per-pixel/int --high-priority/bool?=null:
+    return UartPixelStrip_ pixels --path=path --bytes-per-pixel=bytes-per-pixel --high-priority=high-priority
+
   /**
   Takes three or four byte arrays of pixel values (depending on the number of
     bytes per pixel passed to the constructor) and outputs them to the
