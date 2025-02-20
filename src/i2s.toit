@@ -56,7 +56,7 @@ class I2sPixelStrip extends PixelStrip:
     else:
       tx = pin
 
-    bus_ = i2s.Bus --tx=tx
+    bus_ = i2s.Bus --master --tx=tx --ws=null --sck=null
     bus_.configure --sample-rate=100_000 --bits-per-sample=16
     bus_.start
 
