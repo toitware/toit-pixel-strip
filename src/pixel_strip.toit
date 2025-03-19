@@ -4,6 +4,7 @@
 
 import .uart
 import .i2s
+import .rmt
 import bitmap show blit
 import gpio
 
@@ -34,11 +35,11 @@ abstract class PixelStrip:
     if bytes-per-pixel > 3: inter-3_ = inter_[3..]
 
   /**
-  A driver that sends data to attached WS2812B LED strips, sometimes
-    called Neopixel.  The UART driver is used on the given $pin.
+  Constructs a pixel-strip class controlling the strip with the UART peripheral.
 
   Normally you need to invert the TX pin of a UART to use it for
-    WS2812B LED strips.  Often you also need a level shifter to
+    WS2812B LED strips. The $invert-pin is therefore set by default.
+    You may also need a level shifter to
     convert from 3.3V to 5V.  If your level shifter also inverts
     the pin you can disable the inverted pin support with $invert-pin.
   If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at 3.
@@ -48,6 +49,7 @@ abstract class PixelStrip:
     the UART with a high priority.  However your ESP32 may not have
     the interrupt resources for that, in which case an exception will
     be thrown.  In this case, set $high-priority to false.
+
   # Note
   You must update the whole strip.  If your strip has 15 pixels
     it is not supported to call this constructor with $pixels of 11 in
@@ -56,6 +58,28 @@ abstract class PixelStrip:
   */
   constructor.uart pixels/int --pin/gpio.Pin --invert-pin/bool=true --bytes-per-pixel/int=3 --high-priority/bool?=null:
     return UartPixelStrip_ pixels --pin=pin --invert-pin=invert-pin --bytes-per-pixel=bytes-per-pixel --high-priority=high-priority
+
+  /**
+  Constructs a pixel-strip class controlling the strip with the RMT peripheral.
+
+  The UART driver is generally more tested and should be faster, but if you are running out
+    of UART peripherals the RMT should work fine. It is, probably, also the better choice for
+    few pixels.
+
+  The $memory-block-count specifies how many memory blocks of the RMT
+    peripheral to use.  The default is 1.  If you are using a lot of
+    pixels, you may need to increase this number.  The maximum is 8 on the ESP32, and
+    lower on some variants.
+
+  If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at
+    3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
+    $bytes-per-pixel as 4.
+  */
+  constructor.rmt pixels/int --pin/gpio.Pin --bytes-per-pixel/int=3 --memory-block-count/int=1:
+    return RmtEncodingPixelStrip_ pixels
+        --pin=pin
+        --bytes-per-pixel=bytes-per-pixel
+        --memory-block-count=memory-block-count
 
   /**
   Takes three or four byte arrays of pixel values (depending on the number of
