@@ -1,4 +1,4 @@
 name: pixel_strip
 description: A driver library for WS2812B-compatible LED pixel strips like Neopixels.
 environment:
-  sdk: ^2.0.0-alpha.180
+  sdk: ^2.0.0-alpha.181
