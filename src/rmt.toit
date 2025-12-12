@@ -24,7 +24,7 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
         --memory-blocks=memory-block-count
         --resolution=RESOLUTION_
 
-    null-signal := rmt.Signals.alternating
+    zero-signal := rmt.Signals.alternating
         --resolution=RESOLUTION_
         --first-level=1
         --ns-durations=[T0H_, T0L_]
@@ -33,7 +33,7 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
         --first-level=1
         --ns-durations=[T1H_, T1L_]
     encoder_ = rmt.Encoder --msb {
-      0: null-signal,
+      0: zero-signal,
       1: one-signal,
     }
 
