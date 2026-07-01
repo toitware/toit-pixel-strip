@@ -18,7 +18,12 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
   out_/rmt.Out? := ?
   encoder_/rmt.Encoder? := ?
 
-  constructor pixels/int --pin/gpio.Pin --bytes-per-pixel/int=3 --memory-block-count/int=1:
+  /**
+  Passing a $gpio.Pin is deprecated; provide the integer GPIO number instead.
+  */
+  // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
+  // __TYPE-MIGRATION__ pin: int
+  constructor pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int=1:
     out_ = rmt.Out
         pin
         --memory-blocks=memory-block-count

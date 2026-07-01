@@ -78,7 +78,6 @@ abstract class UartEncodingPixelStrip_ extends PixelStrip:
 
 class UartPixelStrip_ extends UartEncodingPixelStrip_:
   port_ /uart.Port? := ?
-  pin_ /gpio.Pin? := null  // Only set if the pin needs closing.
 
   constructor pixels/int --pin/any --invert-pin/bool=true --bytes-per-pixel/int --high-priority/bool?=null:
     // To use a UART port for WS2812B protocol we set the speed to 2.5 Mbaud,
@@ -86,15 +85,8 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
     // Serial lines are normally high when idle, but the protocol requires
     // low when idle, so we invert the signal by default.  This also means the start
     // bit, normally low, is now high.
-    tx /gpio.Pin := ?
-    if pin is int:
-      tx = gpio.Pin.out pin
-      pin_ = tx
-    else:
-      tx = pin
-
     port_ = uart.Port
-        --tx=tx
+        --tx=pin
         --rx=null
         --baud-rate=2_500_000  // For a 400ns granularity.
         --data-bits=7
@@ -107,9 +99,6 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
     if not port_: return
     port_.close
     port_ = null
-    if pin_:
-      pin_.close
-      pin_ = null
 
   is-closed -> bool:
     return not port_
@@ -123,6 +112,10 @@ Deprecated. Use $PixelStrip.uart instead.
 class UartPixelStrip extends UartPixelStrip_:
   /**
   Deprecated. Use $PixelStrip.uart instead.
+
+  Passing a $gpio.Pin as $pin is deprecated; provide the integer GPIO number instead.
   */
+  // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
+  // __TYPE-MIGRATION__ pin: int
   constructor pixels/int --pin/any --invert-pin/bool=true --bytes-per-pixel/int=3:
     super pixels --pin=pin --invert-pin=invert-pin --bytes-per-pixel=bytes-per-pixel

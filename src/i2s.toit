@@ -24,7 +24,6 @@ class I2sPixelStrip extends PixelStrip:
   out-buf-2_ := ?
   out-buf-3_ := ?
   bus_ /i2s.Bus? := ?
-  pin_ /gpio.Pin? := null // Only set if the pin needs closing.
 
   static BUFFER-SIZE_ ::= 128
   reset_ := ByteArray BUFFER-SIZE_
@@ -32,13 +31,15 @@ class I2sPixelStrip extends PixelStrip:
   /**
   Constructs a pixel-strip class controlling the strip with the i2s peripheral.
 
-  The $pin should be of type $gpio.Pin. The use of a pin number for $pin is
-    deprecated.
+  The $pin is a GPIO number. Passing a $gpio.Pin is deprecated; provide the integer
+    GPIO number instead.
 
   If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
     $bytes-per-pixel as 4.
   */
+  // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
+  // __TYPE-MIGRATION__ pin: int
   constructor pixels/int --pin/any --bytes-per-pixel=3:
     out-buf_ = ByteArray
       round-up
@@ -49,14 +50,7 @@ class I2sPixelStrip extends PixelStrip:
     out-buf-2_ = out-buf_[2..]
     out-buf-3_ = out-buf_[3..]
 
-    tx /gpio.Pin := ?
-    if pin is int:
-      tx = gpio.Pin.out pin
-      pin_ = tx
-    else:
-      tx = pin
-
-    bus_ = i2s.Bus --master --tx=tx --ws=null --sck=null
+    bus_ = i2s.Bus --master --tx=pin --ws=null --sck=null
     bus_.configure --sample-rate=100_000 --bits-per-sample=16
     bus_.start
 
@@ -67,9 +61,6 @@ class I2sPixelStrip extends PixelStrip:
       bus_.stop
       bus_.close
       bus_ = null
-    if pin_:
-      pin_.close
-      pin_ = null
 
   is-closed -> bool:
     return not bus_
