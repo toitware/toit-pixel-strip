@@ -55,8 +55,13 @@ abstract class PixelStrip:
     it is not supported to call this constructor with $pixels of 11 in
     order to update only the first 11 pixels.  This is likely to cause
     color errors on the 12th pixel.
+
+  The $pin is a GPIO number. Passing a $gpio.Pin is deprecated; provide the integer
+    GPIO number instead.
   */
-  constructor.uart pixels/int --pin/gpio.Pin --invert-pin/bool=true --bytes-per-pixel/int=3 --high-priority/bool?=null:
+  // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
+  // __TYPE-MIGRATION__ pin: int
+  constructor.uart pixels/int --pin/any --invert-pin/bool=true --bytes-per-pixel/int=3 --high-priority/bool?=null:
     return UartPixelStrip_ pixels --pin=pin --invert-pin=invert-pin --bytes-per-pixel=bytes-per-pixel --high-priority=high-priority
 
   /**
@@ -74,8 +79,13 @@ abstract class PixelStrip:
   If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
     $bytes-per-pixel as 4.
+
+  The $pin is a GPIO number. Passing a $gpio.Pin is deprecated; provide the integer
+    GPIO number instead.
   */
-  constructor.rmt pixels/int --pin/gpio.Pin --bytes-per-pixel/int=3 --memory-block-count/int=1:
+  // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
+  // __TYPE-MIGRATION__ pin: int
+  constructor.rmt pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int=1:
     return RmtEncodingPixelStrip_ pixels
         --pin=pin
         --bytes-per-pixel=bytes-per-pixel

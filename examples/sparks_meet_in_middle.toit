@@ -7,7 +7,6 @@
 
 import bitmap show bytemap-zap
 import pixel-strip show *
-import gpio
 
 PIXELS ::= 300
 
@@ -16,8 +15,8 @@ END ::= 272
 TX ::= 17
 
 main:
-  neopixels := PixelStrip.uart PIXELS --pin=(gpio.Pin TX) --bytes-per-pixel=4
-  //neopixels := PixelStrip.i2s PIXELS --pin=(gpio.Pin TX) --bytes_per_pixel=4
+  neopixels := PixelStrip.uart PIXELS --pin=TX --bytes-per-pixel=4
+  //neopixels := PixelStrip.i2s PIXELS --pin=TX --bytes_per_pixel=4
   r := ByteArray PIXELS
   g := ByteArray PIXELS
   b := ByteArray PIXELS

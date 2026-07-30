@@ -6,7 +6,6 @@
 
 import bitmap show bytemap-zap
 import pixel-strip show *
-import gpio
 
 /// 32 brightnesses that appear evenly spaced.
 BRIGHTNESSES := get-brightnesses_
@@ -24,7 +23,7 @@ STEPS_ ::= [27, 23, 19, 16]  // Log distributed.
 TX ::= 0
 
 main:
-  neopixel := PixelStrip.uart 1 --pin=(gpio.Pin TX) --bytes-per-pixel=3
+  neopixel := PixelStrip.uart 1 --pin=TX --bytes-per-pixel=3
   r := ByteArray 1
   g := ByteArray 1
   b := ByteArray 1
