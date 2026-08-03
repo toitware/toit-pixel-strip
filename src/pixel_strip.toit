@@ -65,6 +65,21 @@ abstract class PixelStrip:
     return UartPixelStrip_ pixels --pin=pin --invert-pin=invert-pin --bytes-per-pixel=bytes-per-pixel --high-priority=high-priority
 
   /**
+  Constructs a pixel-strip class controlling the strip with the I2S peripheral.
+
+  If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at
+    3. For RGB+WW (warm white) strips with 32 bits per pixel, specify
+    $bytes-per-pixel as 4.
+
+  The $pin is a GPIO number. Passing a $gpio.Pin is deprecated; provide the integer
+    GPIO number instead.
+  */
+  // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
+  // __TYPE-MIGRATION__ pin: int
+  constructor.i2s pixels/int --pin/any --bytes-per-pixel/int=3:
+    return I2sPixelStrip pixels --pin=pin --bytes-per-pixel=bytes-per-pixel
+
+  /**
   Constructs a pixel-strip class controlling the strip with the RMT peripheral.
 
   The UART driver is generally more tested and should be faster, but if you are running out
