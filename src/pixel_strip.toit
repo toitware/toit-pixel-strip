@@ -112,11 +112,11 @@ abstract class PixelStrip:
     strip.  The byte arrays should have the same size as $pixels.
   Data is copied out of the byte arrays, so you can reuse them for the next
     frame.
-  The pixel hardware uses a pause in the transmission to detect the
-    start of the next frame of image data.  Therefore you should leave
-    a few milliseconds before calling this method again.  If your program
-    generates the next frame too fast you may have to add sleep--ms=2 after
-    each call to this method.
+  The UART backend inserts the required reset interval between frames and
+    returns when the data is buffered. Preparing the next frame can overlap
+    transmission of the previous one. Closing the UART strip drains pending output.
+  For the other backends, leave a few milliseconds between calls so that the
+    pixel hardware can detect the start of the next frame.
   */
   output red/ByteArray green/ByteArray blue/ByteArray white/ByteArray?=null -> none:
     if white == null and bytes-per-pixel_ >= 4: throw "INVALID_ARGUMENT"
@@ -137,6 +137,9 @@ abstract class PixelStrip:
     strip.  The byte arrays should have the same size as $pixels.
   Data is copied out of the byte array, so you can reuse it for the next
     frame.
+  The UART backend inserts its own reset interval and returns when the data
+    is buffered. Other backends require the caller to leave a few milliseconds
+    between frames, as described in $output.
   */
   abstract output-interleaved interleaved-data/ByteArray -> none
 
