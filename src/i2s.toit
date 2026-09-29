@@ -78,7 +78,12 @@ class I2sPixelStrip extends PixelStrip:
     bus-started_ = true
     if written < out-buf_.size:
       written += bus_.write out-buf_[written..]
-    if written != out-buf_.size: print "Tried to write $out-buf_.size, wrote $written"
+    // Writes complete when queued. Wait for the encoded frame and reset tail
+    // to leave the pins before another output can restart the DMA ring.
+    // At 100 kHz with stereo 16-bit samples the wire sends 400 bytes/ms.
+    sleep --ms=(out-buf_.size + 399) / 400 + 1
+    bus_.stop
+    bus-started_ = false
 
   static TABLE-0_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[it >> 6]
   static TABLE-1_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[(it >> 4) & 3]
