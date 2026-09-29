@@ -1,0 +1,5 @@
+2adc0dad216d9ce497aaacb03dce3b9b5d9647575bfb2a421e935ea5bca84de3  build/pio-results/esp32-uartfix.envelope
+8837c0e3fa10285e3b0ace53cfaf2b9ddaecdc15b0bb36a5e4e362efa18155e0  build/pio-results/capture-v104.bin
+d1eaff8d97647b8cb676079c08a41dab2544c8fb8bf4fd8705547b66a5a25c47  build/pio-results/contracts-v105.bin
+41b8a248a9e9a1840f81de23b984883d04f1f7737952667684cc53b56461405e  build/pio-results/capture-animation-v106.bin
+46e52c48069c4db79c57622a60783c26351743d029f9d867fea50e57efa17c35  build/pio-results/contracts-v107.bin

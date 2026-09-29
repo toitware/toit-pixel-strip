@@ -1,0 +1,13 @@
+pio-rp2350: starting
+pio-rp2350: echo, copy, ownership, GC PASS
+pio-rp2350: allocating reads and word I/O PASS
+pio-rp2350: movable heap buffers during GC PASS
+pio-rp2350: GP34 output/input loopback PASS
+pio-rp2350: cancellation and close PASS
+pio-rp2350: close wakes blocked waiter PASS
+pio-rp2350: close interrupts pending reclamation PASS
+pio-rp2350: program sharing and upper pins PASS
+pio-rp2350: IRQ persistence and reset PASS
+gpio-interrupt-rp2350: PASS 100 transitions
+pio-rp2350: PASS
+RP2350 application completed

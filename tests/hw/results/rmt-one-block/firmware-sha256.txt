@@ -1,0 +1,10 @@
+2adc0dad216d9ce497aaacb03dce3b9b5d9647575bfb2a421e935ea5bca84de3  build/pio-results/esp32-uartfix.envelope
+7864e560ad3ab356b7ec585cda70b2176573e21027dd9131d53ed2e2b3e3f6a2  build/pio-results/esp32-rmt-bytes.envelope
+637321f759b5a8ea326bc1cb0cfd6d36e22343cfa4960afc0051e7c8637bb8c7  build/pio-results/esp32-rmt-priority.envelope
+a991764d5bda900dffb6f724b655881e70101ab153da0cf7bf938e266c3cc0b1  build/pio-results/esp32-rmt-iram.envelope
+2a719638cc27b97ca26581cedc01e6fa9fd89329652ba5c8a260c5470a701f2d  build/pio-results/esp32-rmt-profile.envelope
+d8d1c962b94dbe6bc5dfac50bcc4d1bed35ce7bf0eb341e901ac5b13c37d9553  build/pio-results/rmt-capture-v108.bin
+472bf5f8ac350030ca629e53227a81d7e3f12e222e910671bcdddea6ba428ac3  build/pio-results/rmt-parallel-v109.bin
+f155a825c010f92e09b9e7ee5c66a1f94f89dcddd2b5dbdd0efdacf0527590ea  build/pio-results/esp32-rmt-bytes-iram-profile.envelope
+bcce1aeff10cebdde085b1710a5641f071154c133c96e2fc59c27ec8116ccec1  build/pio-results/rmt-profile-v110.bin
+165d0fc00dd64d4c411a4ea9dabbc4a03eecb209cafac0751ebcd6b127a078a5  build/pio-results/esp32-rmt-combined.envelope

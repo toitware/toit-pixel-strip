@@ -35,3 +35,8 @@ main:
   // occasionally sleep, to avoid triggering the watchdog.
   sleep --ms=1
 ```
+
+## Hardware validation
+
+Manual ESP32/RP2350 waveform tests, load generators and recorded results are
+under [tests/hw](tests/hw/README.md). They are separate from automatic host tests.

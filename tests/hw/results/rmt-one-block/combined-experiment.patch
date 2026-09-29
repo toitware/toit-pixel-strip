@@ -1,0 +1,82 @@
+--- a/src/resources/rmt_esp32.cc
++++ b/src/resources/rmt_esp32.cc
+@@ -48,6 +48,12 @@
+ static_assert(SOC_RMT_GROUPS * SOC_RMT_CHANNELS_PER_GROUP <= RMT_EVENT_QUEUE_SIZE,
+               "Increase RMT_EVENT_QUEUE_SIZE");
+ 
++#ifdef CONFIG_IDF_TARGET_ESP32
++static const int kInterruptPriority = 3;
++#else
++static const int kInterruptPriority = 0;
++#endif
++
+ const int kReadState = 1 << 0;
+ const int kWriteState = 1 << 1;
+ 
+@@ -264,6 +270,22 @@
+   }
+ 
+   int max_symbol_length() const;
++
++  bool bytes_encoder_config(rmt_bytes_encoder_config_t* config) const {
++    // The IDF bytes encoder handles the common one-symbol-per-bit case
++    // without the generic encoder's per-pattern sequence bookkeeping.
++    if (chunk_size() != 1 || length(START_OFFSET_INDEX) != 0 ||
++        length(BETWEEN_OFFSET_INDEX) != 0 || length(END_OFFSET_INDEX) != 0 ||
++        length(CHUNKS_OFFSET_INDEX) != sizeof(rmt_symbol_word_t) ||
++        length(CHUNKS_OFFSET_INDEX + 2) != sizeof(rmt_symbol_word_t)) {
++      return false;
++    }
++    // Serialized patterns need not be word aligned.
++    memcpy(&config->bit0, sequence(CHUNKS_OFFSET_INDEX), sizeof(config->bit0));
++    memcpy(&config->bit1, sequence(CHUNKS_OFFSET_INDEX + 2), sizeof(config->bit1));
++    config->flags.msb_first = msb();
++    return true;
++  }
+ 
+   static bool validate(const uint8* buffer, int buffer_length);
+ 
+@@ -535,7 +557,8 @@
+   return higher_was_woken == pdTRUE;
+ }
+ 
+-IRAM_ATTR static size_t encoder_callback(const void* data,
++// Experimental bytes-only test: fallback stays in flash to fit IRAM.
++static size_t encoder_callback(const void* data,
+                                          size_t data_size,
+                                          size_t symbols_written,
+                                          size_t symbols_free,
+@@ -721,7 +744,7 @@
+       .resolution_hz = resolution,
+       .mem_block_symbols = static_cast<size_t>(block_symbols),
+       .trans_queue_depth = 1,  // We only allow one active operation.
+-      .intr_priority = 0,
++      .intr_priority = kInterruptPriority,
+       .flags = {
+         .invert_out = false,
+         .with_dma = with_dma,
+@@ -738,7 +761,7 @@
+       .clk_src = RMT_CLK_SRC_DEFAULT,
+       .resolution_hz = resolution,
+       .mem_block_symbols = static_cast<size_t>(block_symbols),
+-      .intr_priority = 0,
++      .intr_priority = kInterruptPriority,
+       .flags = {
+         .invert_in = false,
+         .with_dma = with_dma,
+@@ -859,7 +882,14 @@
+   } };
+ 
+   rmt_encoder_handle_t encoder_handle = null;
+-  if (pattern_encoder_resource != null) {
++  rmt_bytes_encoder_config_t bytes_config = {};
++  bool use_bytes_encoder = pattern_encoder_resource != null && bit_size == items_bytes.length() * 8 &&
++      pattern_encoder_resource->encoder()->bytes_encoder_config(&bytes_config);
++  if (use_bytes_encoder) {
++    esp_err_t err = rmt_new_bytes_encoder(&bytes_config, &encoder_handle);
++    if (err != ESP_OK) return Primitive::os_error(err, process);
++    out->set_encoder(encoder_handle);
++  } else if (pattern_encoder_resource != null) {
+     // Must be in SRAM since it's used from within an interrupt.
+     auto encoder_memory = heap_caps_malloc(sizeof(RmtActivePatternEncoder), SRAM_CAPS);
+     if (!encoder_memory) FAIL(ALLOCATION_FAILED);

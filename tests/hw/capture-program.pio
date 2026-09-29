@@ -1,0 +1,10 @@
+; Copyright (C) 2026 Toit contributors.
+; Use of this source code is governed by an MIT-style license in LICENSE.
+.program capture
+.pio_version 1
+.in 1 left auto 32
+.fifo rx
+    wait 1 pin 0
+.wrap_target
+    in pins, 1
+.wrap

@@ -1,0 +1,3 @@
+# Preserve serial captures and archived diagnostic patches verbatim.
+results/**/*.txt -whitespace
+results/**/*.patch -whitespace

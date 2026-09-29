@@ -1,0 +1,39 @@
+[jaguar] INFO: program c335e313-d1ea-37e8-93be-622acddc4b40 started
+E (71454) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+E (71454) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+pixel-peer: ready
+pixel-peer: 
+pixel-peer: PIXEL-CAPTURE
+pixel-peer: CASE rmt1 200 2 0 2
+RMT-PROFILE calls=148 max_cycles=936 max_gap=11328
+
+***ERROR*** A stack overflow in task EVQ has been detected.
+
+
+Backtrace: 0x400865b5:0x3ffd64b0 0x4009798d:0x3ffd64d0 0x40097e9e:0x3ffd64f0 0x400986e1:0x3ffd6570 0x40097a88:0x3ffd6590 0x40097a3a:0x00000000 |<-CORRUPTED
+
+
+
+
+ELF file SHA256: 985c4791c
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:268
+ho 0 tail 12 room 4
+load:0x40078000,len:13408
+load:0x40080400,len:4
+load:0x40080404,len:2880
+entry 0x40080558
+[toit] INFO: starting <v2.0.0-alpha.199.16+floitsch-rp2350-support.f5987a52>
+[toit] INFO: running on ESP32 - revision 3.0
+[wifi] DEBUG: connecting
+[wifi] DEBUG: connected
+[wifi] INFO: network address dynamically assigned through dhcp {ip: 192.168.77.95}
+[wifi] INFO: dns server address dynamically assigned through dhcp {ip: [192.168.77.1]}
+[jaguar.http] INFO: running Jaguar device 'opposite-singer' (id: 'b04baac9-33b1-48a5-9859-fb6ae86f96e2') on 'http://192.168.77.95:9000'

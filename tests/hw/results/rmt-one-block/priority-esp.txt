@@ -1,0 +1,157 @@
+[jaguar] INFO: program c335e313-d1ea-37e8-93be-622acddc4b40 started
+E (62174) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+E (62174) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+pixel-peer: ready
+pixel-peer: 
+pixel-peer: PIXEL-CAPTURE
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 10421 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 13854 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 10874 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 10571 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 25277 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 27177 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 32494 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 26534 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 58390 us
+pixel-peer: load exchanged 151 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 46275 us
+pixel-peer: load exchanged 111 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 66766 us
+pixel-peer: load exchanged 150 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 41150 us
+pixel-peer: load exchanged 143 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 53057 us
+pixel-peer: load exchanged 154 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 75161 us
+pixel-peer: load exchanged 159 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 80329 us
+pixel-peer: load exchanged 162 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 80370 us
+pixel-peer: load exchanged 100 UDP packets
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 12244 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 10571 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 10609 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 10623 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 27880 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 26885 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 31400 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 27314 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 70797 us
+pixel-peer: load exchanged 148 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 51495 us
+pixel-peer: load exchanged 92 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 52108 us
+pixel-peer: load exchanged 149 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 26604 us
+pixel-peer: load exchanged 93 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 78622 us
+pixel-peer: load exchanged 103 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 73418 us
+pixel-peer: load exchanged 100 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 81729 us
+pixel-peer: load exchanged 163 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 59252 us
+pixel-peer: load exchanged 154 UDP packets
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 11541 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 10558 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 10634 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 11126 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 25324 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 29187 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 29842 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 28369 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 49971 us
+pixel-peer: load exchanged 148 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 64818 us
+pixel-peer: load exchanged 149 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 75616 us
+pixel-peer: load exchanged 90 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 43558 us
+pixel-peer: load exchanged 148 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 73707 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 80531 us
+pixel-peer: load exchanged 97 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 57679 us
+pixel-peer: load exchanged 163 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 49393 us
+pixel-peer: load exchanged 160 UDP packets
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 10548 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 12194 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 10659 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 17309 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 26472 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 26873 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 28205 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 25931 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 30339 us
+pixel-peer: load exchanged 127 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 52087 us
+pixel-peer: load exchanged 88 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 70410 us
+pixel-peer: load exchanged 151 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 45130 us
+[jaguar] INFO: program c335e313-d1ea-37e8-93be-622acddc4b40 stopped
+[jaguar] INFO: program e79355b0-8ea3-f75a-00d5-d5ca174278ba started
+rmt-encoder-esp32: PASS
+[jaguar] INFO: program e79355b0-8ea3-f75a-00d5-d5ca174278ba stopped

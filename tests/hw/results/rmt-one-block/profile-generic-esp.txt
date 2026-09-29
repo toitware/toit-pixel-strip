@@ -1,0 +1,26 @@
+[jaguar] INFO: program c335e313-d1ea-37e8-93be-622acddc4b40 started
+E (30059) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+E (30059) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+pixel-peer: ready
+pixel-peer: 
+pixel-peer: PIXEL-CAPTURE
+pixel-peer: CASE rmt1 200 2 0 2
+RMT-PROFILE calls=148 max_cycles=6482 max_gap=16731
+RMT-PROFILE calls=148 max_cycles=9055 max_gap=17211
+pixel-peer: emitted 2 frames in 32388 us
+pixel-peer: CASE rmt1 200 3 0 2
+RMT-PROFILE calls=148 max_cycles=6611 max_gap=11802
+RMT-PROFILE calls=148 max_cycles=6459 max_gap=12795
+pixel-peer: emitted 2 frames in 28905 us
+pixel-peer: CASE rmt1 200 2 1 2
+RMT-PROFILE calls=148 max_cycles=8740 max_gap=12990
+RMT-PROFILE calls=148 max_cycles=6460 max_gap=22881
+pixel-peer: emitted 2 frames in 59976 us
+pixel-peer: load exchanged 163 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+RMT-PROFILE calls=148 max_cycles=8756 max_gap=9752
+RMT-PROFILE calls=148 max_cycles=6860 max_gap=23223
+pixel-peer: emitted 2 frames in 101249 us
+pixel-peer: load exchanged 162 UDP packets
+pixel-peer: QUIT
+[jaguar] INFO: program c335e313-d1ea-37e8-93be-622acddc4b40 stopped

@@ -1,0 +1,59 @@
+----
+Received a Toit system message. Executing the command below will
+make it human readable:
+----
+jag decode WyNVBVVYU1U0djIuMC4wLWFscGhhLjE5OS4xNitmbG9pdHNjaC1ycDIzNTAtc3VwcG9ydC5mNTk4N2E1MlNVGXdlYWN0X3N0dWRpb19ycDIzNTBiX2NvcmVbJFUjVRDIjlTIsnZey4GDLRIrmqf6WyNVBFVFU1UJRVhDRVBUSU9OU1URREVBRExJTkVfRVhDRUVERURbI1UCVVNbI1UdWyNsAAAAA1VGVQBJV6BbI2wAAAADVUZVAUlka1sjbAAAAANVRlUCSWM+WyNsAAAAA1VGVQNJWT9bI2wAAAADVUZVBElZnVsjbAAAAANVRlUFSWNTWyNsAAAAA1VGVQZJPxhbI2wAAAADVUZVB0k0s1sjbAAAAANVRlUISTBJWyNsAAAAA1VGVQlJM1BbI2wAAAADVUZVCkk0K1sjbAAAAANVRlULSQeZWyNsAAAAA1VGVQxJQ/lbI2wAAAADVUZVDUlEK1sjbAAAAANVRlUOSRdPWyNsAAAAA1VGVQ9JFzVbI2wAAAADVUZVEEkHsVsjbAAAAANVRlURSQaPWyNsAAAAA1VGVRJJBzhbI2wAAAADVUZVE0kBl1sjbAAAAANVRlUUSQF3WyNsAAAAA1VGVRVJDWJbI2wAAAADVUZVFkkPI1sjbAAAAANVRlUXSQ86WyNsAAAAA1VGVRhJRchbI2wAAAADVUZVGUlF4FsjbAAAAANVRlUaSUUEWyNsAAAAA1VGVRtJRYxbI2wAAAADVUZVHEkNew==
+[toit] RP2350 VM starting
+[toit] flash JEDEC ef4018
+[toit] boot partition=1 type=0 trial/update=0
+TOIT-OTA VALIDATED 1
+CASE uart 20 0 0 2: PASS pin=32 high=3..8 low-max=8 reset-min=12484 errors=[]
+CASE uart 20 1 0 2: PASS pin=32 high=4..9 low-max=8 reset-min=11426 errors=[]
+CASE uart 20 2 0 2: PASS pin=32 high=3..9 low-max=8 reset-min=11289 errors=[]
+CASE uart 20 3 0 2: PASS pin=32 high=3..9 low-max=8 reset-min=9810 errors=[]
+CASE uart 200 0 0 2: PASS pin=32 high=3..9 low-max=8 reset-min=15256 errors=[]
+CASE uart 200 1 0 2: PASS pin=32 high=4..9 low-max=8 reset-min=8940 errors=[]
+CASE uart 200 2 0 2: PASS pin=32 high=3..9 low-max=8 reset-min=11308 errors=[]
+CASE uart 200 3 0 2: PASS pin=32 high=3..9 low-max=8 reset-min=9915 errors=[]
+CASE rmt 20 0 0 2: PASS pin=32 high=3..7 low-max=8 reset-min=51492 errors=[]
+CASE rmt 20 1 0 2: PASS pin=32 high=3..7 low-max=8 reset-min=57265 errors=[]
+CASE rmt 20 2 0 2: PASS pin=32 high=2..8 low-max=8 reset-min=60739 errors=[]
+CASE rmt 20 3 0 2: PASS pin=32 high=3..7 low-max=8 reset-min=50550 errors=[]
+CASE rmt 200 0 0 2: PASS pin=32 high=3..8 low-max=8 reset-min=73834 errors=[]
+CASE rmt 200 1 0 2: PASS pin=32 high=3..8 low-max=8 reset-min=82485 errors=[]
+CASE rmt 200 2 0 2: PASS pin=32 high=2..8 low-max=8 reset-min=84201 errors=[]
+CASE rmt 200 3 0 2: PASS pin=32 high=2..8 low-max=8 reset-min=74278 errors=[]
+CASE i2s 20 0 0 2: PASS pin=32 high=2..10 low-max=10 reset-min=63639 errors=[]
+CASE i2s 20 1 0 2: PASS pin=32 high=3..10 low-max=10 reset-min=83389 errors=[]
+CASE i2s 20 2 0 2: PASS pin=32 high=2..10 low-max=10 reset-min=69172 errors=[]
+CASE i2s 20 3 0 2: PASS pin=32 high=2..10 low-max=10 reset-min=65196 errors=[]
+CASE i2s 200 0 0 2: PASS pin=32 high=2..10 low-max=10 reset-min=94597 errors=[]
+CASE i2s 200 1 0 2: FAIL pin=32 high=3..10 low-max=10 reset-min=162392 errors=[capture ended during high pulse, expected 2 frames, got 1]
+CASE i2s 200 2 0 2: PASS pin=32 high=3..10 low-max=10 reset-min=106829 errors=[]
+CASE i2s 200 3 0 2: PASS pin=32 high=2..10 low-max=10 reset-min=90273 errors=[]
+CASE uart 20 0 1 2: PASS pin=32 high=3..8 low-max=8 reset-min=225045 errors=[]
+CASE uart 20 1 1 2: PASS pin=32 high=4..8 low-max=8 reset-min=20426 errors=[]
+CASE uart 20 2 1 2: PASS pin=32 high=3..9 low-max=8 reset-min=272455 errors=[]
+CASE uart 20 3 1 2: PASS pin=32 high=3..8 low-max=8 reset-min=215793 errors=[]
+CASE uart 200 0 1 2: PASS pin=32 high=3..9 low-max=8 reset-min=211379 errors=[]
+CASE uart 200 1 1 2: PASS pin=32 high=4..9 low-max=8 reset-min=217644 errors=[]
+CASE uart 200 2 1 2: PASS pin=32 high=3..9 low-max=8 reset-min=246812 errors=[]
+CASE uart 200 3 1 2: PASS pin=32 high=3..9 low-max=8 reset-min=216023 errors=[]
+CASE rmt 20 0 1 2: PASS pin=32 high=3..7 low-max=8 reset-min=520132 errors=[]
+CASE rmt 20 1 1 2: PASS pin=32 high=3..7 low-max=8 reset-min=462583 errors=[]
+CASE rmt 20 2 1 2: PASS pin=32 high=3..8 low-max=8 reset-min=539064 errors=[]
+CASE rmt 20 3 1 2: PASS pin=32 high=2..8 low-max=8 reset-min=276751 errors=[]
+CASE rmt 200 0 1 2: PASS pin=32 high=2..8 low-max=8 reset-min=504647 errors=[]
+CASE rmt 200 1 1 2: PASS pin=32 high=3..8 low-max=8 reset-min=477704 errors=[]
+CASE rmt 200 2 1 2: PASS pin=32 high=3..8 low-max=8 reset-min=584321 errors=[]
+CASE rmt 200 3 1 2: PASS pin=32 high=3..8 low-max=8 reset-min=450058 errors=[]
+CASE i2s 20 0 1 2: PASS pin=32 high=2..10 low-max=10 reset-min=517804 errors=[]
+CASE i2s 20 1 1 2: PASS pin=32 high=3..10 low-max=10 reset-min=321263 errors=[]
+CASE i2s 20 2 1 2: PASS pin=32 high=2..10 low-max=10 reset-min=317397 errors=[]
+CASE i2s 20 3 1 2: PASS pin=32 high=2..10 low-max=10 reset-min=268150 errors=[]
+CASE i2s 200 0 1 2: PASS pin=32 high=2..10 low-max=10 reset-min=245107 errors=[]
+CASE i2s 200 1 1 2: PASS pin=32 high=3..10 low-max=10 reset-min=255956 errors=[]
+CASE i2s 200 2 1 2: PASS pin=32 high=2..10 low-max=10 reset-min=261533 errors=[]
+CASE i2s 200 3 1 2: PASS pin=32 high=3..10 low-max=10 reset-min=255075 errors=[]
+pixel-capture-rp2350: DONE failures=1
+RP2350 application completed

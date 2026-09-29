@@ -1,0 +1,168 @@
+[jaguar] INFO: program 5e64861a-aea3-d855-2070-541b57bea375 started
+E (11590554) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+E (11590554) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)
+pixel-peer: ready
+pixel-peer: 
+pixel-peer: PIXEL-CAPTURE
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 11135 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 11537 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 10758 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 12952 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 28376 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 28136 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 28185 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 26292 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 48716 us
+pixel-peer: load exchanged 156 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 43337 us
+pixel-peer: load exchanged 92 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 43993 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 69771 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 92602 us
+pixel-peer: load exchanged 101 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 80648 us
+pixel-peer: load exchanged 105 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 79984 us
+pixel-peer: load exchanged 98 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 92741 us
+pixel-peer: load exchanged 168 UDP packets
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 10622 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 11086 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 11448 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 11437 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 25376 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 28388 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 28298 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 27595 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 48746 us
+pixel-peer: load exchanged 154 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 66748 us
+pixel-peer: load exchanged 92 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 26354 us
+pixel-peer: load exchanged 159 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 49206 us
+pixel-peer: load exchanged 105 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 85164 us
+pixel-peer: load exchanged 167 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 71240 us
+pixel-peer: load exchanged 190 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 78438 us
+pixel-peer: load exchanged 167 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 107268 us
+pixel-peer: load exchanged 167 UDP packets
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 11951 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 11462 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 11311 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 10543 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 30081 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 30634 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 30607 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 26895 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 43101 us
+pixel-peer: load exchanged 158 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 49963 us
+pixel-peer: load exchanged 133 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 24620 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 39861 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 99918 us
+pixel-peer: load exchanged 164 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 92801 us
+pixel-peer: load exchanged 170 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 89573 us
+pixel-peer: load exchanged 100 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 79865 us
+pixel-peer: load exchanged 165 UDP packets
+pixel-peer: CASE rmt1 20 0 0 2
+pixel-peer: emitted 2 frames in 10519 us
+pixel-peer: CASE rmt1 20 1 0 2
+pixel-peer: emitted 2 frames in 11284 us
+pixel-peer: CASE rmt1 20 2 0 2
+pixel-peer: emitted 2 frames in 10909 us
+pixel-peer: CASE rmt1 20 3 0 2
+pixel-peer: emitted 2 frames in 11550 us
+pixel-peer: CASE rmt1 200 0 0 2
+pixel-peer: emitted 2 frames in 25978 us
+pixel-peer: CASE rmt1 200 1 0 2
+pixel-peer: emitted 2 frames in 29592 us
+pixel-peer: CASE rmt1 200 2 0 2
+pixel-peer: emitted 2 frames in 31132 us
+pixel-peer: CASE rmt1 200 3 0 2
+pixel-peer: emitted 2 frames in 28412 us
+pixel-peer: CASE rmt1 20 0 1 2
+pixel-peer: emitted 2 frames in 45343 us
+pixel-peer: load exchanged 173 UDP packets
+pixel-peer: CASE rmt1 20 1 1 2
+pixel-peer: emitted 2 frames in 23557 us
+pixel-peer: load exchanged 162 UDP packets
+pixel-peer: CASE rmt1 20 2 1 2
+pixel-peer: emitted 2 frames in 47918 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 20 3 1 2
+pixel-peer: emitted 2 frames in 45778 us
+pixel-peer: load exchanged 157 UDP packets
+pixel-peer: CASE rmt1 200 0 1 2
+pixel-peer: emitted 2 frames in 93243 us
+pixel-peer: load exchanged 166 UDP packets
+pixel-peer: CASE rmt1 200 1 1 2
+pixel-peer: emitted 2 frames in 84586 us
+pixel-peer: load exchanged 169 UDP packets
+pixel-peer: CASE rmt1 200 2 1 2
+pixel-peer: emitted 2 frames in 87285 us
+pixel-peer: load exchanged 105 UDP packets
+pixel-peer: CASE rmt1 200 3 1 2
+pixel-peer: emitted 2 frames in 76517 us
+pixel-peer: load exchanged 167 UDP packets
+pixel-peer: QUIT
+[jaguar] INFO: program 5e64861a-aea3-d855-2070-541b57bea375 stopped
