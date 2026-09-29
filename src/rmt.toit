@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import gpio
+import system
 import rmt
 import bitmap show blit OR
 import .pixel-strip
@@ -23,7 +24,12 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
   */
   // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
   // __TYPE-MIGRATION__ pin: int
-  constructor pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int=1:
+  constructor pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int?=null:
+    // Four blocks give the interrupt-driven encoder room to tolerate Wi-Fi
+    // and audio interrupt latency on the classic ESP32. Other variants have
+    // fewer blocks; retain their existing default until measured separately.
+    if memory-block-count == null:
+      memory-block-count = system.architecture == system.ARCHITECTURE-ESP32 ? 4 : 1
     out_ = rmt.Out
         pin
         --memory-blocks=memory-block-count
