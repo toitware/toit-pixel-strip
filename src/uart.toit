@@ -112,10 +112,11 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
     output-interleaved_ interleaved-data: |encoded|
       port_.out.flush
       // Reset starts after the last bit, even if flush returns without yielding.
-      // A short spin avoids rounding this interval up to a scheduler tick.
+      // Yield instead of sleeping, which would round this interval up to a
+      // scheduler tick.
       deadline := Time.monotonic-us + 300
       while Time.monotonic-us < deadline:
-        null
+        yield
       port_.out.write encoded
 
 /**
