@@ -19,8 +19,13 @@ class I2sPixelStrip extends PixelStrip:
   out-buf-3_ := ?
   bus_ /i2s.Bus? := ?
   bus-started_/bool := false
+  // When the last queued frame has left the pins, in monotonic microseconds.
+  wire-end-us_/int := 0
 
   static BUFFER-SIZE_ ::= 128
+  // At 100 kHz with stereo 16-bit samples the wire sends 400 bytes/ms.
+  static NS-PER-BYTE_ ::= 2_500
+  static CLOSE-MARGIN-MS_ ::= 20
 
   /**
   Constructs a pixel-strip class controlling the strip with the i2s peripheral.
@@ -53,7 +58,14 @@ class I2sPixelStrip extends PixelStrip:
 
   close->none:
     if bus_:
-      if bus-started_: bus_.stop
+      if bus-started_:
+        // Let the queued frames leave the pins before stopping. The margin
+        //   covers the time a frame can wait behind data that the DMA was
+        //   already sending when the frame was queued.
+        remaining-us := wire-end-us_ - Time.monotonic-us
+        if remaining-us > 0: sleep --ms=(remaining-us + 999) / 1000
+        sleep --ms=CLOSE-MARGIN-MS_
+        bus_.stop
       bus_.close
       bus_ = null
 
@@ -69,21 +81,20 @@ class I2sPixelStrip extends PixelStrip:
     blit interleaved-data out-buf-3_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-2_
     blit interleaved-data out-buf-2_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-3_
 
-    // Pixel output is a burst, whereas I2S continuously cycles its DMA ring.
-    //   Preloading before starting avoids losing the beginning of the frame
-    //   while the live ring is being refilled.
-    if bus-started_: bus_.stop
-    written := bus_.preload out-buf_
-    bus_.start
-    bus-started_ = true
-    if written < out-buf_.size:
-      written += bus_.write out-buf_[written..]
-    // Writes complete when queued. Wait for the encoded frame and reset tail
-    // to leave the pins before another output can restart the DMA ring.
-    // At 100 kHz with stereo 16-bit samples the wire sends 400 bytes/ms.
-    sleep --ms=(out-buf_.size + 399) / 400 + 1
-    bus_.stop
-    bus-started_ = false
+    // The bus keeps running between frames and emits silence (low) when it
+    //   runs out of data. Every frame starts with the reset interval, so
+    //   consecutive frames are separated even when they are queued back to
+    //   back. Writes return once the frame is queued.
+    start-us := max Time.monotonic-us wire-end-us_
+    if not bus-started_:
+      // Preload, so the first frame doesn't wait for a lap of the DMA ring.
+      written := bus_.preload out-buf_
+      bus_.start
+      bus-started_ = true
+      if written < out-buf_.size: bus_.write out-buf_[written..]
+    else:
+      bus_.write out-buf_
+    wire-end-us_ = start-us + out-buf_.size * NS-PER-BYTE_ / 1000
 
   static TABLE-0_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[it >> 6]
   static TABLE-1_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[(it >> 4) & 3]
