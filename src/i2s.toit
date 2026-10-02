@@ -20,9 +20,10 @@ class I2sPixelStrip extends PixelStrip:
   bus_ /i2s.Bus? := ?
   bus-started_/bool := false
 
-  // ESP-IDF's default DMA ring has 6 buffers of 240 stereo 16-bit frames.
-  static DMA-BUFFER-COUNT_ ::= 6
-  // One DMA buffer of zeros, which keeps the line low.
+  static BUFFER-SIZE_ ::= 128
+
+  // The ESP-IDF default DMA ring: 6 descriptors of 240 stereo 16-bit frames.
+  static DMA-DESCRIPTOR-COUNT_ ::= 6
   static IDLE_ ::= ByteArray 240 * 4
 
   /**
@@ -38,11 +39,16 @@ class I2sPixelStrip extends PixelStrip:
   // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
   // __TYPE-MIGRATION__ pin: int
   constructor pixels/int --pin/any --bytes-per-pixel=3:
-    out-buf_ = ByteArray pixels * bytes-per-pixel * 4
-    out-buf-0_ = out-buf_[0..]
-    out-buf-1_ = out-buf_[1..]
-    out-buf-2_ = out-buf_[2..]
-    out-buf-3_ = out-buf_[3..]
+    encoded-size := round-up (pixels * bytes-per-pixel * 4) BUFFER-SIZE_
+    // Keep the reset period and encoded pixels in one I2S write. Separate
+    //   writes can underrun at their boundary and drop the first DMA words of
+    //   the pixel data.
+    out-buf_ = ByteArray BUFFER-SIZE_ + encoded-size
+    encoded := out-buf_[BUFFER-SIZE_..]
+    out-buf-0_ = encoded[0..]
+    out-buf-1_ = encoded[1..]
+    out-buf-2_ = encoded[2..]
+    out-buf-3_ = encoded[3..]
 
     bus_ = i2s.Bus --master --tx=pin --ws=null --sck=null
     bus_.configure --sample-rate=100_000 --bits-per-sample=16
@@ -51,10 +57,7 @@ class I2sPixelStrip extends PixelStrip:
 
   close->none:
     if bus_:
-      if bus-started_:
-        // Push the last frame through the DMA ring before stopping.
-        (DMA-BUFFER-COUNT_ + 1).repeat: bus_.write IDLE_
-        bus_.stop
+      if bus-started_: bus_.stop
       bus_.close
       bus_ = null
 
@@ -70,18 +73,21 @@ class I2sPixelStrip extends PixelStrip:
     blit interleaved-data out-buf-3_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-2_
     blit interleaved-data out-buf-2_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-3_
 
-    if not bus-started_:
-      bus_.start
-      bus-started_ = true
-    // The bus keeps streaming between frames and emits silence (low) when it
-    //   runs out of data. When writing resumes after such an underrun, ESP-IDF
-    //   puts the first bytes into a partially filled buffer from the previous
-    //   write, which has already been played, and then into the buffer that is
-    //   about to be played. Lead with two DMA buffers of idle, so that only
-    //   idle data is affected. The idle data also provides the reset interval.
-    bus_.write IDLE_
-    bus_.write IDLE_
-    bus_.write out-buf_
+    // Pixel output is a burst, whereas I2S continuously cycles its DMA ring.
+    //   Preloading before starting avoids losing the beginning of the frame
+    //   while the live ring is being refilled.
+    if bus-started_: bus_.stop
+    written := bus_.preload out-buf_
+    bus_.start
+    bus-started_ = true
+    if written < out-buf_.size:
+      bus_.write out-buf_[written..]
+    // Writes return once the data is queued in the DMA ring. Follow the frame
+    //   with more idle (low) data than the ring holds, so the write only
+    //   returns once the frame has left the pins. The next output can then
+    //   restart the bus without truncating this frame. An underrun between the
+    //   frame and the idle data emits silence, which is low as well.
+    (DMA-DESCRIPTOR-COUNT_ + 1).repeat: bus_.write IDLE_
 
   static TABLE-0_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[it >> 6]
   static TABLE-1_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[(it >> 4) & 3]
