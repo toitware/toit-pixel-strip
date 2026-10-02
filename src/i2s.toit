@@ -22,10 +22,6 @@ class I2sPixelStrip extends PixelStrip:
 
   static BUFFER-SIZE_ ::= 128
 
-  // The ESP-IDF default DMA ring: 6 descriptors of 240 stereo 16-bit frames.
-  static DMA-DESCRIPTOR-COUNT_ ::= 6
-  static IDLE_ ::= ByteArray 240 * 4
-
   /**
   Constructs a pixel-strip class controlling the strip with the i2s peripheral.
 
@@ -81,13 +77,13 @@ class I2sPixelStrip extends PixelStrip:
     bus_.start
     bus-started_ = true
     if written < out-buf_.size:
-      bus_.write out-buf_[written..]
-    // Writes return once the data is queued in the DMA ring. Follow the frame
-    //   with more idle (low) data than the ring holds, so the write only
-    //   returns once the frame has left the pins. The next output can then
-    //   restart the bus without truncating this frame. An underrun between the
-    //   frame and the idle data emits silence, which is low as well.
-    (DMA-DESCRIPTOR-COUNT_ + 1).repeat: bus_.write IDLE_
+      written += bus_.write out-buf_[written..]
+    // Writes complete when queued. Wait for the encoded frame and reset tail
+    // to leave the pins before another output can restart the DMA ring.
+    // At 100 kHz with stereo 16-bit samples the wire sends 400 bytes/ms.
+    sleep --ms=(out-buf_.size + 399) / 400 + 1
+    bus_.stop
+    bus-started_ = false
 
   static TABLE-0_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[it >> 6]
   static TABLE-1_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[(it >> 4) & 3]
