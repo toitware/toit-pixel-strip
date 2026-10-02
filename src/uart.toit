@@ -97,14 +97,27 @@ class UartPixelStrip_ extends UartEncodingPixelStrip_:
 
   close->none:
     if not port_: return
-    port_.close
-    port_ = null
+    try:
+      // The last output may still be buffered when the caller closes the strip.
+      port_.out.flush
+    finally:
+      port_.close
+      port_ = null
 
   is-closed -> bool:
     return not port_
 
   output-interleaved interleaved-data/ByteArray -> none:
-    output-interleaved_ interleaved-data: port_.out.write it
+    // Encode before waiting, overlapping preparation with the previous output.
+    output-interleaved_ interleaved-data: |encoded|
+      port_.out.flush
+      // Reset starts after the last bit, even if flush returns without yielding.
+      // Yield instead of sleeping, which would round this interval up to a
+      // scheduler tick.
+      deadline := Time.monotonic-us + 300
+      while Time.monotonic-us < deadline:
+        yield
+      port_.out.write encoded
 
 /**
 Deprecated. Use $PixelStrip.uart instead.
