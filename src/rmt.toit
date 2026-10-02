@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import gpio
+import system
 import rmt
 import bitmap show blit OR
 import .pixel-strip
@@ -14,6 +15,8 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
   static T0L_ ::= 800
   static T1H_ ::= 700
   static T1L_ ::= 600
+  // Newer WS2812B parts need more than 280us of low to latch a frame.
+  static RESET_ ::= 300_000
 
   out_/rmt.Out? := ?
   encoder_/rmt.Encoder? := ?
@@ -23,7 +26,12 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
   */
   // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
   // __TYPE-MIGRATION__ pin: int
-  constructor pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int=1:
+  constructor pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int?=null:
+    // Four blocks give the interrupt-driven encoder room to tolerate Wi-Fi
+    // and audio interrupt latency on the classic ESP32. Other variants have
+    // fewer blocks; retain their existing default until measured separately.
+    if memory-block-count == null:
+      memory-block-count = system.architecture == system.ARCHITECTURE-ESP32 ? 4 : 1
     out_ = rmt.Out
         pin
         --memory-blocks=memory-block-count
@@ -37,7 +45,13 @@ class RmtEncodingPixelStrip_ extends PixelStrip:
         --resolution=RESOLUTION_
         --first-level=1
         --ns-durations=[T1H_, T1L_]
-    encoder_ = rmt.Encoder --msb {
+    // Terminate every frame with the reset interval, so that consecutive
+    // writes are separated. Use one item of two low halves, since a single
+    // signal would be padded with an end marker.
+    reset-signal := rmt.Signals 2 --resolution=RESOLUTION_
+    reset-signal.set 0 --ns=(RESET_ / 2) --level=0
+    reset-signal.set 1 --ns=(RESET_ / 2) --level=0
+    encoder_ = rmt.Encoder --msb --stop=reset-signal {
       0: zero-signal,
       1: one-signal,
     }
