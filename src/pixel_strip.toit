@@ -87,9 +87,10 @@ abstract class PixelStrip:
     few pixels.
 
   The $memory-block-count specifies how many memory blocks of the RMT
-    peripheral to use.  The default is 1.  If you are using a lot of
-    pixels, you may need to increase this number.  The maximum is 8 on the ESP32, and
-    lower on some variants.
+    peripheral to use. The default is 4 on the classic ESP32 and 1 on other
+    variants. More memory gives the encoder additional time to service
+    interrupts while Wi-Fi or audio is active. These blocks are shared with
+    other RMT users. The maximum is 8 on the ESP32 and lower on some variants.
 
   If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
@@ -100,7 +101,7 @@ abstract class PixelStrip:
   */
   // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
   // __TYPE-MIGRATION__ pin: int
-  constructor.rmt pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int=1:
+  constructor.rmt pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int?=null:
     return RmtEncodingPixelStrip_ pixels
         --pin=pin
         --bytes-per-pixel=bytes-per-pixel
