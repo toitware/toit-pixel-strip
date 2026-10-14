@@ -87,9 +87,10 @@ abstract class PixelStrip:
     few pixels.
 
   The $memory-block-count specifies how many memory blocks of the RMT
-    peripheral to use.  The default is 1.  If you are using a lot of
-    pixels, you may need to increase this number.  The maximum is 8 on the ESP32, and
-    lower on some variants.
+    peripheral to use. The default is 4 on the classic ESP32 and 1 on other
+    variants. More memory gives the encoder additional time to service
+    interrupts while Wi-Fi or audio is active. These blocks are shared with
+    other RMT users. The maximum is 8 on the ESP32 and lower on some variants.
 
   If your strip is RGB (24 bits per pixel), leave $bytes-per-pixel at
     3.  For RGB+WW (warm white) strips with 32 bits per pixel, specify
@@ -100,7 +101,7 @@ abstract class PixelStrip:
   */
   // __TYPE-MIGRATION__ pin: gpio.Pin. Deprecated. Provide an integer instead.
   // __TYPE-MIGRATION__ pin: int
-  constructor.rmt pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int=1:
+  constructor.rmt pixels/int --pin/any --bytes-per-pixel/int=3 --memory-block-count/int?=null:
     return RmtEncodingPixelStrip_ pixels
         --pin=pin
         --bytes-per-pixel=bytes-per-pixel
@@ -112,11 +113,12 @@ abstract class PixelStrip:
     strip.  The byte arrays should have the same size as $pixels.
   Data is copied out of the byte arrays, so you can reuse them for the next
     frame.
-  The pixel hardware uses a pause in the transmission to detect the
-    start of the next frame of image data.  Therefore you should leave
-    a few milliseconds before calling this method again.  If your program
-    generates the next frame too fast you may have to add sleep--ms=2 after
-    each call to this method.
+  All backends insert the reset interval the pixel hardware needs to detect
+    the start of the next frame, so no pause is needed between calls.
+  The RMT and I2S backends return once the frame has been transmitted.
+  The UART backend returns when the data is buffered. Preparing the next
+    frame can overlap transmission of the previous one. Closing the UART
+    strip drains pending output.
   */
   output red/ByteArray green/ByteArray blue/ByteArray white/ByteArray?=null -> none:
     if white == null and bytes-per-pixel_ >= 4: throw "INVALID_ARGUMENT"
@@ -137,6 +139,7 @@ abstract class PixelStrip:
     strip.  The byte arrays should have the same size as $pixels.
   Data is copied out of the byte array, so you can reuse it for the next
     frame.
+  As with $output, no pause is needed between calls.
   */
   abstract output-interleaved interleaved-data/ByteArray -> none
 
