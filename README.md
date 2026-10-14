@@ -8,14 +8,6 @@ timing-based protocol.
 To use it, you need to feed byte-arrays of red, green and blue pixel
 data to the strips.
 
-The I2S backend requires the SDK's ESP-IDF I2S TX underrun fix
-([esp-idf#136](https://github.com/toitware/esp-idf/pull/136)). It keeps the bus
-running between frames and drains pending output when closed. The minimum SDK
-version is v2.0.0-alpha.199.50, the development version used by the Toit fix
-([toit#3287](https://github.com/toitlang/toit/pull/3287)). The released alpha.199
-firmware does not contain the fix. Custom development firmware must include
-the fix as well.
-
 ## Example
 
 ```
