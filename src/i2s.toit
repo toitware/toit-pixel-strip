@@ -21,6 +21,11 @@ class I2sPixelStrip extends PixelStrip:
   bus-started_/bool := false
 
   static BUFFER-SIZE_ ::= 128
+  // The SDK uses six DMA buffers of 240 stereo 16-bit frames (960 bytes).
+  // One extra buffer covers the FIFO and the strip's final reset interval.
+  static DMA-BUFFER-SIZE_ ::= 960
+  static DRAIN-BUFFER-COUNT_ ::= 7
+  static IDLE_ ::= ByteArray DMA-BUFFER-SIZE_
 
   /**
   Constructs a pixel-strip class controlling the strip with the i2s peripheral.
@@ -36,9 +41,7 @@ class I2sPixelStrip extends PixelStrip:
   // __TYPE-MIGRATION__ pin: int
   constructor pixels/int --pin/any --bytes-per-pixel=3:
     encoded-size := round-up (pixels * bytes-per-pixel * 4) BUFFER-SIZE_
-    // Keep the reset period and encoded pixels in one I2S write. Separate
-    //   writes can underrun at their boundary and drop the first DMA words of
-    //   the pixel data.
+    // Lead every frame with 320 us low, including back-to-back frames.
     out-buf_ = ByteArray BUFFER-SIZE_ + encoded-size
     encoded := out-buf_[BUFFER-SIZE_..]
     out-buf-0_ = encoded[0..]
@@ -52,10 +55,16 @@ class I2sPixelStrip extends PixelStrip:
     super pixels --bytes-per-pixel=bytes-per-pixel
 
   close->none:
-    if bus_:
-      if bus-started_: bus_.stop
+    if not bus_: return
+    try:
+      if bus-started_:
+        // Queue more idle data than the DMA ring and FIFO can hold. Waiting
+        //   for buffer space drains the final frame and reset before stopping.
+        DRAIN-BUFFER-COUNT_.repeat: bus_.write IDLE_
+    finally:
       bus_.close
       bus_ = null
+      bus-started_ = false
 
   is-closed -> bool:
     return not bus_
@@ -69,21 +78,15 @@ class I2sPixelStrip extends PixelStrip:
     blit interleaved-data out-buf-3_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-2_
     blit interleaved-data out-buf-2_ pixels_ * bytes-per-pixel_ --destination-pixel-stride=4 --lookup-table=TABLE-3_
 
-    // Pixel output is a burst, whereas I2S continuously cycles its DMA ring.
-    //   Preloading before starting avoids losing the beginning of the frame
-    //   while the live ring is being refilled.
-    if bus-started_: bus_.stop
-    written := bus_.preload out-buf_
-    bus_.start
-    bus-started_ = true
-    if written < out-buf_.size:
-      written += bus_.write out-buf_[written..]
-    // Writes complete when queued. Wait for the encoded frame and reset tail
-    // to leave the pins before another output can restart the DMA ring.
-    // At 100 kHz with stereo 16-bit samples the wire sends 400 bytes/ms.
-    sleep --ms=(out-buf_.size + 399) / 400 + 1
-    bus_.stop
-    bus-started_ = false
+    // Keep the bus running. The SDK clears transmitted buffers, so underruns
+    //   emit low. Output returns once the frame has been copied into DMA buffers.
+    if not bus-started_:
+      written := bus_.preload out-buf_
+      bus_.start
+      bus-started_ = true
+      if written < out-buf_.size: bus_.write out-buf_[written..]
+    else:
+      bus_.write out-buf_
 
   static TABLE-0_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[it >> 6]
   static TABLE-1_ ::= ByteArray 256: ENCODING-TABLE-2-BIT_[(it >> 4) & 3]

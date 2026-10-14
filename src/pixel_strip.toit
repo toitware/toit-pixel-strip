@@ -115,10 +115,10 @@ abstract class PixelStrip:
     frame.
   All backends insert the reset interval the pixel hardware needs to detect
     the start of the next frame, so no pause is needed between calls.
-  The RMT and I2S backends return once the frame has been transmitted.
-  The UART backend returns when the data is buffered. Preparing the next
-    frame can overlap transmission of the previous one. Closing the UART
-    strip drains pending output.
+  The RMT backend returns once the frame has been transmitted.
+  The UART and I2S backends return when the data is buffered. Preparing the
+    next frame can overlap transmission of the previous one. Closing a UART
+    or I2S strip drains pending output.
   */
   output red/ByteArray green/ByteArray blue/ByteArray white/ByteArray?=null -> none:
     if white == null and bytes-per-pixel_ >= 4: throw "INVALID_ARGUMENT"
